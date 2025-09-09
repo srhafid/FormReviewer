@@ -16,6 +16,12 @@ let totalQuestions = 0;
 let globalTimerInterval;
 let questionTimerInterval;
 let userSelections = {};
+let selectedDifficulty = 'medium';
+const timePerQuestion = {
+    easy: 30,
+    medium: 20,
+    hard: 10
+};
 
 function loadQuestions(jsonFile) {
     fetch("lessons/" + jsonFile)
@@ -25,73 +31,9 @@ function loadQuestions(jsonFile) {
         })
         .then(data => {
             questions = data;
-            shuffledQuestions = shuffle([...questions]);
-            shuffledQuestions.forEach(question => {
-                question.options = shuffle([...question.options]);
-            });
-
-            answers = {};
-            shuffledQuestions.forEach(question => {
-                const correctOption = question.options.find(opt => opt.correct);
-                answers[question.id] = correctOption ? correctOption.value : '';
-            });
-
-            totalQuestions = shuffledQuestions.length;
-            document.getElementById('totalQuestions').innerText = totalQuestions;
-
-            const form = document.getElementById('quizForm');
-            form.innerHTML = '';
-            shuffledQuestions.forEach((question, index) => {
-                const div = document.createElement('div');
-                div.id = question.id;
-                div.className = `outline-box ${index === 0 ? 'visible' : 'hidden'}`;
-                div.innerHTML = `
-                            <p class="font-semibold text-lg mb-4">${index + 1}. ${question.text}</p>
-                            ${question.options.map(opt => `
-                                <label class="text-base"><input type="radio" name="${question.id}" value="${opt.value}"> ${opt.text}</label><br>
-                            `).join('')}
-                            <div id="feedback${question.id}" class="mt-4"></div>
-                            <div id="questionTimer${question.id}" class="question-timer"></div>
-                        `;
-                form.appendChild(div);
-            });
-
-            points = 0;
-            streak = 0;
-            currentQuestion = 1;
-            userSelections = {};
-            document.getElementById('points').innerText = points;
-            document.getElementById('streak').innerText = streak;
-            document.getElementById('score').innerText = '';
-            document.getElementById('summary').innerHTML = '';
-            document.getElementById('progressFill').style.width = '0%';
-            updateProgress();
-
-            document.querySelectorAll('input[type="radio"]').forEach(input => {
-                input.addEventListener('change', () => {
-                    const questionId = input.name;
-                    userSelections[questionId] = input.value;
-                    evaluateAndMoveToNext(questionId);
-                });
-            });
-
-            document.getElementById('quizContainer').style.display = 'block';
-
-            let globalTimeLeft = 600;
-            document.getElementById('timer').innerText = 'Tiempo Total: 10:00';
-            globalTimerInterval = setInterval(() => {
-                globalTimeLeft--;
-                const min = Math.floor(globalTimeLeft / 60);
-                const sec = globalTimeLeft % 60;
-                document.getElementById('timer').innerText = `Tiempo Total: ${min}:${sec < 10 ? '0' + sec : sec}`;
-                if (globalTimeLeft <= 0) {
-                    clearInterval(globalTimerInterval);
-                    clearInterval(questionTimerInterval);
-                    document.getElementById('submitBtn').click();
-                }
-            }, 1000);
-
-            startQuestionTimer(currentQuestion - 1);
+            document.getElementById('lessonSelector').parentElement.classList.add('hidden');
+            document.getElementById('difficultySelector').classList.remove('hidden');
+            document.getElementById('startQuizBtn').addEventListener('click', () => startQuiz());
         })
         .catch(error => {
             console.error('Error al cargar el JSON:', error);
@@ -99,9 +41,85 @@ function loadQuestions(jsonFile) {
         });
 }
 
+function startQuiz() {
+    if (!selectedDifficulty) {
+        alert('Por favor, selecciona un nivel de dificultad.');
+        return;
+    }
+    document.getElementById('difficultySelector').classList.add('hidden');
+    document.getElementById('timePerQuestion').innerText = timePerQuestion[selectedDifficulty];
+    shuffledQuestions = shuffle([...questions]);
+    shuffledQuestions.forEach(question => {
+        question.options = shuffle([...question.options]);
+    });
+
+    answers = {};
+    shuffledQuestions.forEach(question => {
+        const correctOption = question.options.find(opt => opt.correct);
+        answers[question.id] = correctOption ? correctOption.value : '';
+    });
+
+    totalQuestions = shuffledQuestions.length;
+    document.getElementById('totalQuestions').innerText = totalQuestions;
+
+    const form = document.getElementById('quizForm');
+    form.innerHTML = '';
+    shuffledQuestions.forEach((question, index) => {
+        const div = document.createElement('div');
+        div.id = question.id;
+        div.className = `outline-box ${index === 0 ? 'visible' : 'hidden'}`;
+        div.innerHTML = `
+                    <p class="font-semibold text-lg mb-4">${index + 1}. ${question.text}</p>
+                    ${question.options.map(opt => `
+                        <label class="text-base"><input type="radio" name="${question.id}" value="${opt.value}"> ${opt.text}</label><br>
+                    `).join('')}
+                    <div id="feedback${question.id}" class="mt-4"></div>
+                    <div id="questionTimer${question.id}" class="question-timer"></div>
+                `;
+        form.appendChild(div);
+    });
+
+    points = 0;
+    streak = 0;
+    currentQuestion = 1;
+    userSelections = {};
+    document.getElementById('points').innerText = points;
+    document.getElementById('streak').innerText = streak;
+    document.getElementById('score').innerText = '';
+    document.getElementById('summary').innerHTML = '';
+    document.getElementById('progressFill').style.width = '0%';
+    updateProgress();
+
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.addEventListener('change', () => {
+            const questionId = input.name;
+            userSelections[questionId] = input.value;
+            evaluateAndMoveToNext(questionId);
+        });
+    });
+
+    document.getElementById('quizContainer').style.display = 'block';
+
+    let globalTimeLeft = 600;
+    document.getElementById('timer').innerText = 'Tiempo Total: 10:00';
+    globalTimerInterval = setInterval(() => {
+        globalTimeLeft--;
+        const min = Math.floor(globalTimeLeft / 60);
+        const sec = globalTimeLeft % 60;
+        document.getElementById('timer').innerText = `Tiempo Total: ${min}:${sec < 10 ? '0' + sec : sec}`;
+        if (globalTimeLeft <= 0) {
+            clearInterval(globalTimerInterval);
+            clearInterval(questionTimerInterval);
+            document.getElementById('submitBtn').click();
+        }
+    }, 1000);
+
+    startQuestionTimer(currentQuestion - 1);
+}
+
 function startQuestionTimer(index) {
     if (questionTimerInterval) clearInterval(questionTimerInterval);
-    let timeLeft = 30;
+    let timeLeft = timePerQuestion[selectedDifficulty];
     const questionId = shuffledQuestions[index].id;
     const timerDisplay = document.getElementById(`questionTimer${questionId}`);
     timerDisplay.innerText = `Tiempo restante: ${timeLeft}s`;
@@ -191,6 +209,13 @@ document.getElementById('loadLessonBtn').addEventListener('click', () => {
     } else {
         alert('Por favor, selecciona una lección.');
     }
+});
+
+document.querySelectorAll('input[name="difficulty"]').forEach(input => {
+    input.addEventListener('change', () => {
+        selectedDifficulty = input.value;
+        document.getElementById('startQuizBtn').disabled = false;
+    });
 });
 
 document.getElementById('submitBtn').addEventListener('click', () => {
