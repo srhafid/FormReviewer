@@ -32,42 +32,53 @@ Incluye un script en Node.js (`inject-lessons.js`) que se encarga de inyectar au
 node inject-lessons.js
 ```
 
-#### promp example
+### promp example
 
 Este prompt sirve para generar automáticamente cuestionarios en formato JSON a partir de una explicación dada.
 
 ```txt
-Crea un cuestionario de evaluación en formato JSON basado en la siguiente explicación: [INSERTAR_EXPLICACIÓN_AQUÍ]
+Genera EXCLUSIVAMENTE un objeto JSON válido y bien formado para un cuestionario de evaluación, basado en el siguiente contexto: [INSERTAR_CONTEXTO_AQUÍ]
 
-Requisitos:
-1. Genera exactamente [NÚMERO_DE_PREGUNTAS] preguntas
-2. Cada explicación en las opciones debe tener una extensión de [LONGITUD_EXPLICACIÓN] (corta/mediana/larga)
-3. Formato de salida JSON con esta estructura:
-[
-    {
-        "id": "q1",
-        "text": "Pregunta aquí",
-        "options": [
-            {
-                "value": "a",
-                "text": "Opción aquí",
-                "correct": true/false,
-                "explanation": "Explicación aquí"
-            }
-        ]
-    }
-]
+**Parámetros:**
+- Número de preguntas: [NÚMERO_DE_PREGUNTAS]
+- Longitud de explicaciones: [LONGITUD_EXPLICACIÓN] (corta/mediana/larga)
 
-Instrucciones específicas:
-- Las preguntas deben cubrir diferentes aspectos de la explicación
-- Solo una opción correcta por pregunta
-- Las explicaciones deben ser precisas y basadas en el contenido
-- Usa un lenguaje claro y apropiado para el tema
-- Incluye opciones plausibles pero incorrectas
-- Varía el tipo de preguntas (conceptuales, aplicativas, de detalles)
+**Estructura JSON requerida (sin comentarios ni placeholders):**
+{
+    "context": ["texto del contexto utilizado"],
+    "questions": [
+        {
+            "id": "identificador único",
+            "text": "texto de la pregunta",
+            "options": [
+                {
+                    "value": "letra opción",
+                    "text": "texto opción",
+                    "correct": valor_booleano,
+                    "explanation": "texto explicación"
+                }
+            ]
+        }
+    ]
+}
 
-Parámetros configurables:
-- Número de preguntas: [X]
-- Longitud de explicaciones: [corta (1-2 oraciones), mediana (3-4 oraciones), larga (5+ oraciones)]
+**Reglas estrictas de formato:**
+- SALIDA ÚNICAMENTE JSON VÁLIDO - sin texto, ni comentarios, ni marcas, ni acentos graves
+- SIN caracteres de escape adicionales (\\, \n, \t) innecesarios
+- SIN "```json" o cualquier otro delimitador de código
+- SIN contenido antes o después del objeto JSON
+- Las strings del JSON deben usar comillas dobles exclusivamente
+- Los valores booleanos deben ser true/false sin comillas
+
+**Instrucciones de contenido:**
+- Basa todo el contenido estrictamente en el contexto proporcionado
+- Genera exactamente el número especificado de preguntas
+- Variedad de tipos de preguntas (conceptuales, aplicativas, detalle)
+- Solo una opción correcta por pregunta (correct: true)
+- Explicaciones con longitud apropiada: corta(1-2 oraciones), mediana(3-4), larga(5+)
+- Opciones incorrectas deben ser plausibles pero erróneas
+- Lenguaje claro y profesional acorde al tema
+
+El output debe ser directamente parseable por cualquier parser JSON estándar.
 
 ```

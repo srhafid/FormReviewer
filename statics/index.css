@@ -145,3 +145,11 @@ p {
     color: #e53e3e;
     margin-top: 12px;
 }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+.animate-fade-in {
+  animation: fade-in 0.7s;
+}

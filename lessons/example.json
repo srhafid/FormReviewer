@@ -1,0 +1,97 @@
+{
+    "context": [
+        "Imagina que trabajas como analista de seguridad y recibes alertas de actividad sospechosa en la red. Descubres que deberás implementar más medidas para evitar incidentes graves. Pero ¿por dónde empiezas? Como analista, primero debes identificar los activos y riesgos cruciales. Luego implementarás los marcos y controles necesarios. En este video, veremos cómo las/los profesionales de seguridad usan marcos para identificar y gestionar el riesgo. También veremos cómo usar controles de seguridad para gestionar o reducir riesgos. Los marcos de seguridad son pautas usadas en la creación de planes para mitigar riesgos y amenazas a los datos y la privacidad. Ofrecen un enfoque estructurado para implementar un ciclo de seguridad. El ciclo de seguridad lo conforman políticas y normas en evolución que definen cómo la organización gestiona los riesgos, sigue las políticas establecidas y cumple con normas o leyes. Hay varios marcos de seguridad que pueden usarse para manejar riesgos empresariales y cumplimiento normativo. Entre sus fines están proteger la información de identificación personal, abreviada como PII, proteger la información financiera, identificar debilidades de seguridad, manejar riesgos organizacionales y alinear los objetivos de seguridad con los de la empresa. Los marcos tienen cuatro componentes principales. Al conocerlos manejarás mejor los riesgos potenciales. El primer componente principal es identificar y documentar los objetivos de seguridad. Por ejemplo, una organización tiene el objetivo de alinearse con el Reglamento General de Protección de Datos de la UE, también conocido como RGPD. El RGPD es una ley de protección de datos creada para dar a los ciudadanos europeos más control sobre sus datos personales. Se puede pedir a un/a analista de ciberseguridad identificar y documentar áreas de incumplimiento con el RGPD. El segundo componente es crear pautas para alcanzar los objetivos de ciberseguridad. Por ejemplo, al implementar políticas para cumplir con el RGPD, puede que la organización deba crear nuevas políticas sobre cómo manejar solicitudes de datos de usuarios/as individuales. El tercer componente es implementar procesos de seguridad fuertes. En el caso del RGPD, un/a analista que trabaja para una empresa de redes sociales puede diseñar procedimientos para cumplir con las solicitudes de datos de sus usuarios/as. Un ejemplo de estas solicitudes es cuando una persona intenta actualizar o eliminar su información de perfil. El último componente de los marcos de seguridad es monitorear y comunicar los resultados. Por ejemplo, puedes monitorear la red interna de la organización y reportar a tu superior o responsable de cumplimiento un problema de seguridad potencial que afecta el RGPD. Tras presentar los cuatro componentes de los marcos de seguridad, analicémoslos juntos. Con los marcos, las y los analistas trabajan con otros miembros del equipo de seguridad para documentar, implementar y usar las políticas y los procedimientos. La/el analista de nivel inicial debe entender este proceso, pues impacta directamente en su trabajo y en cómo colabora con los demás. A continuación, veremos controles de seguridad. Los controles de seguridad son medidas que reducen ciertos riesgos de seguridad. Por ejemplo, puede haber una directiva de que los colaboradores deben hacer una capacitación de privacidad para evitar la filtración de datos. Como analista, puedes usar una herramienta de software para asignar de forma automática y ver quiénes realizan la capacitación. Los marcos y los controles son vitales para gestionar la seguridad de toda organización y garantizar que todas las personas colaboren para mantener un nivel de riesgo bajo. Al entender su propósito y cómo se usan, las/los analistas contribuyen al logro de los objetivos de seguridad y protegen a los/las usuarios/as. En los siguientes videos, veremos marcos y principios que las/los analistas deben conocer para minimizar el riesgo y proteger los datos y a los/las usuarios/as."
+    ],
+    "questions": [
+        {
+            "id": "q1",
+            "text": "Al recibir alertas de actividad sospechosa según el contexto, ¿cuál debe ser el primer paso que realice el analista para comenzar a gestionar el riesgo?",
+            "options": [
+                {
+                    "value": "a",
+                    "text": "Implementar de inmediato todos los controles de seguridad disponibles sin análisis previo.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque el texto enfatiza un orden claro en el proceso de gestión del riesgo: primero identificar y documentar, y luego implementar marcos y controles. Implementar controles inmediatamente sin identificar activos y riesgos puede llevar a soluciones mal orientadas que no abordan las vulnerabilidades más críticas. El contexto describe que el analista debe comenzar identificando activos y riesgos cruciales antes de aplicar medidas. Además, los marcos y controles se deben alinear con objetivos documentados para ser efectivos. Por tanto, saltarse la etapa de identificación contradice el flujo recomendado en el material."
+                },
+                {
+                    "value": "b",
+                    "text": "Identificar y documentar los activos y los riesgos cruciales antes de implementar marcos y controles.",
+                    "correct": true,
+                    "explanation": "Esta opción es correcta porque el contexto indica explícitamente que, ante alertas y la necesidad de más medidas, el analista debe primero identificar los activos y los riesgos cruciales. El texto posiciona esa actividad como el punto de partida antes de diseñar e implementar marcos y controles adecuados. Identificar y documentar permite priorizar esfuerzos y asegurar que las políticas y procesos posteriores se dirijan a los riesgos reales. Sin esa identificación previa, las medidas pueden no ser efectivas ni estar alineadas con los objetivos de la organización. Por eso el material presenta la identificación como el paso inicial esencial en la gestión del riesgo."
+                },
+                {
+                    "value": "c",
+                    "text": "Notificar al responsable de cumplimiento y esperar instrucciones sin realizar análisis propio.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque el contexto no promueve la pasividad ni esperar únicamente instrucciones; describe un proceso activo que comienza con la identificación por parte del analista. Aunque la colaboración con responsables y cumplimiento es mencionada, el texto subraya que el analista debe tomar pasos concretos como identificar activos y riesgos y trabajar junto al equipo para documentar y aplicar medidas. Esperar sin analizar implicaría omitir las etapas iniciales que permiten diseñar controles adecuados. Además, el material describe un ciclo en el que el analista participa activamente, por lo que la espera pasiva no concuerda con la guía presentada. Por tanto, esta opción no refleja el enfoque recomendado en el texto."
+                },
+                {
+                    "value": "d",
+                    "text": "Reemplazar todas las políticas y controles existentes por nuevas medidas de forma inmediata.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque el contexto describe un ciclo estructurado de seguridad con políticas y normas en evolución, no una sustitución abrupta y total de todo lo existente. El material plantea documentar objetivos, crear pautas, implementar procesos y luego monitorear y comunicar resultados; este enfoque implica cambios planificados y alineados con objetivos, no reemplazos instantáneos. Reemplazar todas las políticas de golpe podría romper la alineación con objetivos empresariales y no tomar en cuenta la priorización basada en identificación de activos y riesgos. Además, el texto menciona la colaboración y el ajuste continuo, lo que sugiere un proceso iterativo más que una sustitución radical. Por eso esta alternativa no se ajusta a lo expuesto en el contenido."
+                }
+            ]
+        },
+        {
+            "id": "q2",
+            "text": "Según el contexto, ¿qué son los marcos de seguridad y cuál es su función principal dentro de la gestión del riesgo?",
+            "options": [
+                {
+                    "value": "a",
+                    "text": "Pautas usadas para crear planes que mitiguen riesgos y amenazas a los datos y la privacidad, ofreciendo un enfoque estructurado para el ciclo de seguridad.",
+                    "correct": true,
+                    "explanation": "Esta opción es correcta porque el texto define los marcos de seguridad como pautas empleadas en la creación de planes para mitigar riesgos y amenazas a los datos y la privacidad. Además, el material explica que los marcos ofrecen un enfoque estructurado para implementar un ciclo de seguridad compuesto por políticas y normas en evolución. Los marcos ayudan a identificar debilidades, proteger PII y otra información sensible, manejar riesgos organizacionales y alinear objetivos de seguridad con los de la empresa. El documento también detalla los cuatro componentes principales de un marco, lo que refuerza su carácter estructural y procesal. En conjunto, esto confirma que la función principal de los marcos es guiar la creación y ejecución de estrategias coherentes de gestión del riesgo."
+                },
+                {
+                    "value": "b",
+                    "text": "Herramientas de software que automáticamente corrigen vulnerabilidades sin intervención humana.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque el contexto no describe los marcos como herramientas de software ni como soluciones automáticas que corrigen vulnerabilidades por sí solas. El texto presenta los marcos como pautas y enfoques estructurados para diseñar políticas, procedimientos y un ciclo de seguridad, no como aplicaciones o programas. Si bien el material menciona herramientas de software en el contexto de asignar y verificar capacitaciones, esa referencia no convierte al marco en una herramienta técnica. Confundir el marco con software implica una interpretación equivocada entre el concepto guía y las herramientas operativas que pueden emplearse en su implementación. Por tanto, esta opción no se corresponde con lo expuesto en el texto."
+                },
+                {
+                    "value": "c",
+                    "text": "Normas legales obligatorias que siempre reemplazan las políticas internas de la organización.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque, aunque el texto menciona leyes como el RGPD como ejemplos de objetivos con los que una organización puede alinearse, no afirma que los marcos sean leyes obligatorias. Los marcos se describen como pautas para crear planes y alinear objetivos, mientras que leyes como el RGPD son mandatos legales específicos. Los marcos pueden ayudar a cumplir con normas legales, pero no son en sí mismas la legislación ni reemplazan automáticamente las políticas internas sin análisis y adaptación. Confundir marcos con leyes es mezclar niveles distintos del ecosistema de cumplimiento, lo que no concuerda con la explicación proporcionada. Por ello, esta alternativa es una interpretación errónea del contenido."
+                },
+                {
+                    "value": "d",
+                    "text": "Un conjunto exclusivo de medidas destinadas únicamente a proteger información de identificación personal (PII).",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque el texto indica que proteger PII es uno de varios fines de los marcos, pero no su único propósito. Además de PII, los marcos buscan proteger información financiera, identificar debilidades de seguridad, manejar riesgos organizacionales y alinear los objetivos de seguridad con los de la empresa. Reducir los marcos a únicamente la protección de PII omite su alcance más amplio y su papel en un ciclo de seguridad integral. El material enfatiza la variedad de objetivos y componentes que componen un marco efectivo. Por tanto, esta respuesta resulta demasiado restrictiva y no refleja completamente lo expuesto."
+                }
+            ]
+        },
+        {
+            "id": "q3",
+            "text": "El contexto describe cuatro componentes principales de los marcos de seguridad. ¿Cuál es el último componente y qué implica según el texto?",
+            "options": [
+                {
+                    "value": "a",
+                    "text": "Monitorear y comunicar los resultados; implica vigilar la red interna y reportar problemas potenciales al responsable de cumplimiento.",
+                    "correct": true,
+                    "explanation": "Esta opción es correcta porque el texto identifica explícitamente el monitoreo y la comunicación de resultados como el último componente del marco de seguridad. El ejemplo dado en el material indica que esto puede implicar monitorear la red interna y reportar a un superior o responsable de cumplimiento problemas de seguridad que afectan, por ejemplo, al RGPD. Monitorear y comunicar cierra el ciclo de seguridad al permitir verificar la eficacia de políticas y procesos y notificar incumplimientos o riesgos emergentes. El contexto también relaciona esta etapa con la colaboración entre analistas y otros miembros del equipo para documentar, implementar y usar políticas y procedimientos. Por todo ello, la descripción coincide con lo señalado en el contenido proporcionado."
+                },
+                {
+                    "value": "b",
+                    "text": "Implementar procesos de seguridad fuertes; implica diseñar procedimientos técnicos para responder a incidentes sin la etapa previa de monitoreo.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque, aunque implementar procesos de seguridad fuertes es uno de los componentes mencionados, el texto lo ubica como el tercer componente, no como el último. El contenido expone el orden: identificar y documentar objetivos, crear pautas, implementar procesos y finalmente monitorear y comunicar resultados. Sugerir que implementar procesos sea el último componente omite la etapa de monitoreo que permite evaluar la eficacia de esos procesos. Además, el ejemplo del RGPD en el texto ilustra la necesidad de procedimientos, pero también muestra que dichos procesos deben ser seguidos por actividades de monitoreo y reporte. Por eso esta alternativa no responde correctamente a la pregunta sobre el último componente."
+                },
+                {
+                    "value": "c",
+                    "text": "Crear pautas para alcanzar los objetivos; implica redactar políticas sin necesidad de documentar objetivos primero.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque crear pautas está descrito en el texto como el segundo componente del marco, no el último. El material subraya que la creación de pautas sigue a la identificación y documentación de objetivos, por lo que ordenar estas etapas de forma inversa contradice el ciclo presentado. Además, el ejemplo muestra que las pautas se diseñan para alcanzar objetivos específicos como el cumplimiento del RGPD, lo que requiere previamente haber identificado dichos objetivos. Omitir la secuencia adecuada podría dar lugar a políticas desalineadas con las metas de la organización. Por tanto, esta respuesta no coincide con el orden y la lógica expuestos en el contexto."
+                },
+                {
+                    "value": "d",
+                    "text": "Identificar y documentar los objetivos de seguridad; implica establecer los objetivos legales y técnicos como último paso del ciclo.",
+                    "correct": false,
+                    "explanation": "Esta opción es incorrecta porque el texto señala que identificar y documentar los objetivos de seguridad es el primer componente del marco, no el último. El material incluso ofrece el ejemplo del RGPD como un objetivo que debe identificarse y documentarse al inicio del proceso. Colocar esta actividad al final invertiría el flujo lógico necesario para diseñar pautas, procesos y actividades de monitoreo coherentes. La identificación temprana de objetivos es lo que permite alinear medidas posteriores con requisitos legales y empresariales. Por ello, esta alternativa contradice explícitamente el orden y la descripción presentes en el contenido."
+                }
+            ]
+        }
+    ]
+}

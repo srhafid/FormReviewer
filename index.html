@@ -9,59 +9,83 @@
     <link rel="stylesheet" href="./statics/index.css">
 </head>
 
-<body class="container mx-auto p-6">
-    <h1 id="header-smoth-scroll" class="text-4xl font-bold text-center mb-6 text-[#ed8936]">Cuestionario de
-        Ciberseguridad</h1>
-    <p class="text-center mb-8 text-lg">Selecciona una lección para cargar las preguntas desde un archivo JSON y
-        comenzar el cuestionario.</p>
+<body class="mx-auto min-h-screen flex flex-col w-full">
+    <div class="flex-1">
+        <h1 id="header-smoth-scroll" class="text-4xl font-bold text-center mb-6 text-[#ed8936]">Cuestionario de
+            Repasos Customizados</h1>
+        <p class="text-center mb-8 text-lg">Selecciona una lección para cargar las preguntas desde un archivo JSON y
+            comenzar el cuestionario.</p>
 
-    <div class="text-center mb-8">
-        <select id="lessonSelector">
-            <option value="">-- Selecciona una lección --</option>
-            <option value="introduccion_a_la_ciberseguridad.json">Introduccion a la ciberseguridad</option>
-        </select>
-        <button id="loadLessonBtn" class="ml-4 px-2 py-1 mt-5">Cargar Lección</button>
-    </div>
-
-    <div id="difficultySelector" class="text-center mb-8 hidden">
-        <p class="text-lg mb-4">Selecciona el nivel de dificultad:</p>
-        <div class="outline-box">
-            <label><input type="radio" name="difficulty" value="easy"> Fácil (30s por pregunta)</label><br>
-            <label><input type="radio" name="difficulty" value="medium"> Medio (20s por pregunta)</label><br>
-            <label><input type="radio" name="difficulty" value="hard"> Difícil (10s por pregunta)</label><br>
+        <div class="text-center mb-8">
+            <select id="lessonSelector">
+                <option value="">-- Selecciona una lección --</option>
+                <option value="example.json">Example</option>
+                <option value="introduccion_a_la_ciberseguridad.json">Introduccion a la ciberseguridad</option>
+            </select>
+            <button id="loadLessonBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold">Cargar
+                Lección</button>
         </div>
-        <button id="startQuizBtn" class="mt-4 px-2 py-1" disabled>Comenzar Cuestionario</button>
-    </div>
+        <div id="lessonContext"
+            class="max-w-2xl mx-auto mb-8 hidden bg-white rounded-lg shadow-lg p-8 text-lg text-gray-700 animate-fade-in">
+        </div>
+        <div class="text-center mb-8">
+            <button id="showDifficultyBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold hidden">Iniciar
+                Cuestionario</button>
+        </div>
 
-    <div id="quizContainer" class="hidden">
-        <p class="text-center mb-8 text-lg">¡Responde rápido y protege la red! Tienes <span id="timePerQuestion"></span> segundos por pregunta. ¡Gana
-            puntos y mantén tu racha!</p>
 
-        <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
-            <div class="flex justify-between mb-4 text-sm font-medium">
-                <span>Puntos: <span id="points" class="text-[#ed8936]">0</span></span>
-                <span>Racha: <span id="streak" class="text-[#ed8936]">0</span>x</span>
-                <span id="timer" class="text-[#ed8936]">Tiempo Total: 10:00</span>
-                <span>Pregunta: <span id="currentQuestion">1</span> / <span id="totalQuestions">0</span></span>
+        <div id="difficultySelector" class="text-center mb-8 hidden">
+            <p class="text-lg mb-4">Selecciona el nivel de dificultad:</p>
+            <div class="outline-box">
+                <label><input type="radio" name="difficulty" value="easy"> Fácil (30s por pregunta)</label><br>
+                <label><input type="radio" name="difficulty" value="medium"> Medio (20s por pregunta)</label><br>
+                <label><input type="radio" name="difficulty" value="hard"> Difícil (10s por pregunta)</label><br>
             </div>
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+            <button id="startQuizBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold mt-8"
+                disabled>Comenzar Cuestionario</button>
+        </div>
+
+        <div id="quizContainer" class="hidden">
+            <p class="text-center mb-8 text-lg">¡Responde rápido! <span id="timePerQuestion"></span>¡Gana
+                puntos y mantén tu racha!</p>
+
+            <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex justify-between mb-4 text-sm font-medium">
+                    <span>Puntos: <span id="points" class="text-[#ed8936]">0</span></span>
+                    <span>Racha: <span id="streak" class="text-[#ed8936]">0</span>x</span>
+                    <span id="timer" class="text-[#ed8936]">Tiempo Total: 10:00</span>
+                    <span>Pregunta: <span id="currentQuestion">1</span> / <span id="totalQuestions">0</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                </div>
             </div>
+
+            <div class="slider-container">
+                <form id="quizForm"></form>
+            </div>
+
+            <div class="text-center">
+                <button type="button" id="submitBtn" disabled
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold">Evaluar Respuestas</button>
+                <button type="button" id="resetBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold">Reiniciar Juego</button>
+            </div>
+            <div id="score" class="text-center mt-8 text-xl font-bold"></div>
+            <div id="summary" class="mt-12 max-w-md mx-auto"></div>
         </div>
 
-        <div class="slider-container">
-            <form id="quizForm"></form>
-        </div>
-
-        <div class="text-center">
-            <button type="button" id="submitBtn" disabled class="ml-4 px-2 py-1 mt-5">Evaluar Respuestas</button>
-            <button type="button" id="resetBtn" class="ml-4 px-2 py-1 mt-5">Reiniciar Juego</button>
-        </div>
-        <div id="score" class="text-center mt-8 text-xl font-bold"></div>
-        <div id="summary" class="mt-12 max-w-md mx-auto"></div>
+        <button id="floatingReadBtn"
+            class="fixed bottom-8 right-8 z-50 bg-[#ed8936] text-white rounded-full shadow-lg px-6 py-3 font-bold text-lg flex items-center hidden">
+            <svg id="floatingReadIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span id="floatingReadText">Leer contexto</span>
+        </button>
     </div>
 
-    <footer class="fixed bottom-0 left-0 py-4 w-full h-auto bg-[#ed8936]">
+    <footer class="py-4 w-full h-auto bg-[#ed8936]">
         <div class="w-full flex justify-center item-center">
             <a href="https://github.com/srhafid/FormReviewer" class="block hover:cursor-pointer" target="_blank">
                 <svg class="text-white w-8 h-8" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
