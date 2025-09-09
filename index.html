@@ -23,8 +23,18 @@
         <button id="loadLessonBtn" class="ml-4 px-2 py-1 mt-5">Cargar Lección</button>
     </div>
 
-    <div id="quizContainer">
-        <p class="text-center mb-8 text-lg">¡Responde rápido y protege la red! Tienes 30 segundos por pregunta. ¡Gana
+    <div id="difficultySelector" class="text-center mb-8 hidden">
+        <p class="text-lg mb-4">Selecciona el nivel de dificultad:</p>
+        <div class="outline-box">
+            <label><input type="radio" name="difficulty" value="easy"> Fácil (30s por pregunta)</label><br>
+            <label><input type="radio" name="difficulty" value="medium"> Medio (20s por pregunta)</label><br>
+            <label><input type="radio" name="difficulty" value="hard"> Difícil (10s por pregunta)</label><br>
+        </div>
+        <button id="startQuizBtn" class="mt-4 px-2 py-1" disabled>Comenzar Cuestionario</button>
+    </div>
+
+    <div id="quizContainer" class="hidden">
+        <p class="text-center mb-8 text-lg">¡Responde rápido y protege la red! Tienes <span id="timePerQuestion"></span> segundos por pregunta. ¡Gana
             puntos y mantén tu racha!</p>
 
         <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
