@@ -147,9 +147,131 @@ p {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(30px);}
-  to { opacity: 1; transform: translateY(0);}
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 .animate-fade-in {
-  animation: fade-in 0.7s;
+    animation: fade-in 0.7s;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #ed8936;
+    transition: width 0.4s ease-in-out;
+}
+
+.outline-box {
+    border: 2px solid #ed8936;
+    border-radius: 12px;
+    padding: 24px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.outline-box label {
+    display: block;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #1a202c;
+}
+
+.outline-box input[type="radio"] {
+    accent-color: #ed8936;
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+.outline-box label:hover {
+    color: #ed8936;
+}
+
+.correct {
+    color: #38a169;
+    font-weight: 600;
+}
+
+.incorrect {
+    color: #e53e3e;
+    font-weight: 600;
+}
+
+.slider-container {
+    position: relative;
+    min-height: 320px;
+    margin-bottom: 24px;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+.summary-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f7fafc;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.summary-item:hover {
+    background-color: #edf2f7;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.7s ease-out;
+}
+
+@media (max-width: 640px) {
+    .flex.space-x-4 {
+        flex-direction: column;
+        space-x: 0;
+        space-y: 1rem;
+    }
+
+    #lessonSelector {
+        width: 100%;
+    }
 }

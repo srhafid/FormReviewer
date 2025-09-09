@@ -1,3 +1,90 @@
+// IndexedDB setup
+let db;
+const request = indexedDB.open('QuizDatabase', 1);
+
+request.onupgradeneeded = function(event) {
+    db = event.target.result;
+    if (!db.objectStoreNames.contains('lessons')) {
+        db.createObjectStore('lessons', { keyPath: 'id', autoIncrement: true });
+    }
+};
+
+request.onsuccess = function(event) {
+    db = event.target.result;
+    updateLessonSelector();
+};
+
+request.onerror = function(event) {
+    console.error('Error opening IndexedDB:', event.target.error);
+};
+
+function saveLessonToDB(lessonData, filename) {
+    const transaction = db.transaction(['lessons'], 'readwrite');
+    const store = transaction.objectStore('lessons');
+    const lesson = {
+        id: Date.now(), // Unique ID based on timestamp
+        filename: filename,
+        data: lessonData,
+        source: 'db'
+    };
+    const addRequest = store.add(lesson);
+
+    addRequest.onsuccess = function() {
+        updateLessonSelector();
+        alert('Lección guardada en la base de datos exitosamente.');
+    };
+
+    addRequest.onerror = function(event) {
+        console.error('Error saving to IndexedDB:', event.target.error);
+        alert('Error al guardar la lección en la base de datos.');
+    };
+}
+
+function getLessonsFromDB() {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['lessons'], 'readonly');
+        const store = transaction.objectStore('lessons');
+        const request = store.getAll();
+
+        request.onsuccess = function(event) {
+            resolve(event.target.result);
+        };
+
+        request.onerror = function(event) {
+            reject(event.target.error);
+        };
+    });
+}
+
+function updateLessonSelector() {
+    const select = document.getElementById('lessonSelector');
+    if (!select || !db) return;
+
+    getLessonsFromDB().then(lessons => {
+        // Clear existing options except the default
+        select.innerHTML = '<option value="">-- Selecciona una lección --</option>';
+
+        // Add lessons from filesystem
+        const fileLessons = [
+            { value: 'example.json', text: 'Example' },
+            { value: 'introduccion_a_la_ciberseguridad.json', text: 'Introduccion a la ciberseguridad' }
+        ];
+        fileLessons.forEach(lesson => {
+            const option = new Option(lesson.text, lesson.value);
+            select.appendChild(option);
+        });
+
+        // Add lessons from IndexedDB
+        lessons.forEach(lesson => {
+            const displayName = lesson.filename ? lesson.filename.replace('.json', '') : 'Lección Sin Nombre';
+            const option = new Option(`${displayName} (DB)`, lesson.id.toString());
+            select.appendChild(option);
+        });
+    }).catch(error => {
+        console.error('Error updating lesson selector:', error);
+    });
+}
+
 class QuizManager {
     constructor() {
         this.questions = [];
@@ -44,19 +131,85 @@ class QuizManager {
         document.getElementById('resetBtn').addEventListener('click', () => window.location.reload());
         document.getElementById('showDifficultyBtn').addEventListener('click', () => this.showDifficultySelector());
         document.getElementById('floatingReadBtn').addEventListener('click', () => this.handleFloatingReadButton());
+        document.getElementById('loadFromDbBtn').addEventListener('click', () => this.openLoadJsonModal());
+        document.getElementById('cancelLoadJsonBtn').addEventListener('click', () => this.closeLoadJsonModal());
+        document.getElementById('saveJsonBtn').addEventListener('click', () => this.saveJsonFromModal());
 
         document.querySelectorAll('input[name="difficulty"]').forEach(input => {
             input.addEventListener('change', () => this.handleDifficultyChange(input.value));
         });
     }
 
+    openLoadJsonModal() {
+        document.getElementById('loadJsonModal').classList.remove('hidden');
+        document.getElementById('jsonInput').focus();
+    }
+
+    closeLoadJsonModal() {
+        document.getElementById('loadJsonModal').classList.add('hidden');
+        document.getElementById('jsonInput').value = '';
+        document.getElementById('lessonName').value = '';
+    }
+
+    saveJsonFromModal() {
+        const jsonText = document.getElementById('jsonInput').value.trim();
+        const lessonName = document.getElementById('lessonName').value.trim() || 'leccion_personalizada.json';
+
+        if (!jsonText) {
+            alert('Por favor, pega el JSON en el área de texto.');
+            return;
+        }
+
+        try {
+            const jsonData = JSON.parse(jsonText);
+            saveLessonToDB(jsonData, lessonName);
+            this.closeLoadJsonModal();
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            alert('Error al procesar el JSON. Asegúrate de que sea un formato válido.');
+        }
+    }
+
     async handleLoadLesson() {
-        const selectedFile = document.getElementById('lessonSelector').value;
-        if (!selectedFile) {
+        const selectedValue = document.getElementById('lessonSelector').value;
+        if (!selectedValue) {
             alert('Por favor, selecciona una lección.');
             return;
         }
-        await this.loadQuestions(selectedFile);
+
+        if (selectedValue.match(/^\d+$/)) {
+            // Load from IndexedDB
+            await this.loadFromDB(selectedValue);
+        } else {
+            // Load from file system
+            await this.loadQuestions(selectedValue);
+        }
+    }
+
+    async loadFromDB(lessonId) {
+        if (!db) {
+            alert('Base de datos no disponible.');
+            return;
+        }
+
+        const transaction = db.transaction(['lessons'], 'readonly');
+        const store = transaction.objectStore('lessons');
+        const request = store.get(parseInt(lessonId));
+
+        request.onsuccess = (event) => {
+            const lesson = event.target.result;
+            if (lesson) {
+                this.processQuestionData(lesson.data, lesson.filename);
+                this.hideSelectors();
+            } else {
+                alert('Lección no encontrada en la base de datos.');
+            }
+        };
+
+        request.onerror = (event) => {
+            console.error('Error loading from IndexedDB:', event.target.error);
+            alert('Error al cargar la lección desde la base de datos.');
+        };
     }
 
     async loadQuestions(jsonFile) {
@@ -249,11 +402,11 @@ class QuizManager {
         const questionId = this.shuffledQuestions[index].id;
         const timerDisplay = document.getElementById(`questionTimer${questionId}`);
 
-        timerDisplay.innerText = `Tiempo restante: ${timeLeft}s`;
+        if (timerDisplay) timerDisplay.innerText = `Tiempo restante: ${timeLeft}s`;
 
         this.timers.question = setInterval(() => {
             timeLeft--;
-            timerDisplay.innerText = `Tiempo restante: ${timeLeft}s`;
+            if (timerDisplay) timerDisplay.innerText = `Tiempo restante: ${timeLeft}s`;
 
             if (timeLeft <= 0) {
                 this.clearQuestionTimer();
@@ -305,14 +458,20 @@ class QuizManager {
 
     hideCurrentQuestion(index) {
         const currentQuestionId = this.shuffledQuestions[index].id;
-        document.getElementById(currentQuestionId).classList.remove('visible');
-        document.getElementById(currentQuestionId).classList.add('hidden');
+        const element = document.getElementById(currentQuestionId);
+        if (element) {
+            element.classList.remove('visible');
+            element.classList.add('hidden');
+        }
     }
 
     showNextQuestion(index) {
         const nextQuestionId = this.shuffledQuestions[index].id;
-        document.getElementById(nextQuestionId).classList.remove('hidden');
-        document.getElementById(nextQuestionId).classList.add('visible');
+        const element = document.getElementById(nextQuestionId);
+        if (element) {
+            element.classList.remove('hidden');
+            element.classList.add('visible');
+        }
     }
 
     finishQuestions() {
@@ -397,11 +556,15 @@ class QuizManager {
 
     showSpecificQuestion(questionId) {
         this.shuffledQuestions.forEach(q => {
-            document.getElementById(q.id).classList.add('hidden');
+            const element = document.getElementById(q.id);
+            if (element) element.classList.add('hidden');
         });
 
-        document.getElementById(questionId).classList.remove('hidden');
-        document.getElementById(questionId).classList.add('visible');
+        const targetElement = document.getElementById(questionId);
+        if (targetElement) {
+            targetElement.classList.remove('hidden');
+            targetElement.classList.add('visible');
+        }
         this.currentQuestion = this.shuffledQuestions.findIndex(q => q.id === questionId) + 1;
         this.updateProgress();
     }
@@ -544,29 +707,34 @@ class QuizManager {
         this.speech.utterance.onstart = () => {
             this.speech.isReading = true;
             this.speech.isPaused = false;
-            document.getElementById('floatingReadText').innerText = 'Pausar';
+            const textElement = document.getElementById('floatingReadText');
+            if (textElement) textElement.innerText = 'Pausar';
         };
 
         this.speech.utterance.onpause = () => {
             this.speech.isPaused = true;
-            document.getElementById('floatingReadText').innerText = 'Reanudar';
+            const textElement = document.getElementById('floatingReadText');
+            if (textElement) textElement.innerText = 'Reanudar';
         };
 
         this.speech.utterance.onresume = () => {
             this.speech.isPaused = false;
-            document.getElementById('floatingReadText').innerText = 'Pausar';
+            const textElement = document.getElementById('floatingReadText');
+            if (textElement) textElement.innerText = 'Pausar';
         };
 
         this.speech.utterance.onend = () => {
             this.speech.isReading = false;
             this.speech.isPaused = false;
-            document.getElementById('floatingReadText').innerText = 'Leer contexto';
+            const textElement = document.getElementById('floatingReadText');
+            if (textElement) textElement.innerText = 'Leer contexto';
         };
 
         this.speech.utterance.onerror = () => {
             this.speech.isReading = false;
             this.speech.isPaused = false;
-            document.getElementById('floatingReadText').innerText = 'Leer contexto';
+            const textElement = document.getElementById('floatingReadText');
+            if (textElement) textElement.innerText = 'Leer contexto';
         };
     }
 
