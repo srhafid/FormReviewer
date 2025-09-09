@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Gamificado de Ciberseguridad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./statics/index.css">
+</head>
+
+<body class="container mx-auto p-6">
+    <h1 id="header-smoth-scroll" class="text-4xl font-bold text-center mb-6 text-[#ed8936]">Cuestionario de
+        Ciberseguridad</h1>
+    <p class="text-center mb-8 text-lg">Selecciona una lección para cargar las preguntas desde un archivo JSON y
+        comenzar el cuestionario.</p>
+
+    <div class="text-center mb-8">
+        <select id="lessonSelector">
+            <option value="">-- Selecciona una lección --</option>
+            <option value="introduccion_a_la_ciberseguridad.json">Introducción a la Ciberseguridad</option>
+        </select>
+        <button id="loadLessonBtn" class="ml-4 px-2 py-1 mt-5">Cargar Lección</button>
+    </div>
+
+    <div id="quizContainer">
+        <p class="text-center mb-8 text-lg">¡Responde rápido y protege la red! Tienes 30 segundos por pregunta. ¡Gana
+            puntos y mantén tu racha!</p>
+
+        <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex justify-between mb-4 text-sm font-medium">
+                <span>Puntos: <span id="points" class="text-[#ed8936]">0</span></span>
+                <span>Racha: <span id="streak" class="text-[#ed8936]">0</span>x</span>
+                <span id="timer" class="text-[#ed8936]">Tiempo Total: 10:00</span>
+                <span>Pregunta: <span id="currentQuestion">1</span> / <span id="totalQuestions">0</span></span>
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="slider-container">
+            <form id="quizForm"></form>
+        </div>
+
+        <div class="text-center">
+            <button type="button" id="submitBtn" disabled class="ml-4 px-2 py-1 mt-5">Evaluar Respuestas</button>
+            <button type="button" id="resetBtn" class="ml-4 px-2 py-1 mt-5">Reiniciar Juego</button>
+        </div>
+        <div id="score" class="text-center mt-8 text-xl font-bold"></div>
+        <div id="summary" class="mt-12 max-w-md mx-auto"></div>
+    </div>
+
+    <script src="./statics/index.js"></script>
+</body>
+
+</html>
