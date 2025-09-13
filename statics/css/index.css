@@ -1,257 +1,111 @@
+:root {
+    --primary: #F59E0B;
+    --primary-light: #FBBF24;
+    --primary-dark: #D97706;
+    --secondary: #F97316;
+    --accent: #EA580C;
+    --light: #FFFBEB;
+    --dark: #1E293B;
+    --success: #10B981;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+}
+
 body {
-    background-color: #f0f4f8;
-    color: #1a202c;
     font-family: 'Inter', sans-serif;
-    line-height: 1.6;
-    scroll-behavior: smooth;
+    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+    min-height: 100vh;
 }
 
-.outline-box {
-    border: 2px solid #ed8936;
-    border-radius: 12px;
-    padding: 24px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.outline-box label {
-    display: block;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: #2d3748;
-}
-
-.outline-box input[type="radio"] {
-    accent-color: #ed8936;
-    margin-right: 10px;
-    transform: scale(1.2);
-}
-
-.outline-box label:hover {
-    color: #ed8936;
-}
-
-button {
-    background-color: #ed8936;
+.btn-primary {
+    background-color: var(--primary);
     color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
-button:hover:not(:disabled) {
-    background-color: #dd6b20;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
-button:disabled {
-    background-color: #e2e8f0;
-    cursor: not-allowed;
+.btn-secondary {
+    background-color: var(--secondary);
+    color: white;
+    transition: all 0.3s ease;
 }
 
-.correct {
-    color: #38a169;
-    font-weight: 600;
+.btn-secondary:hover {
+    background-color: #EA580C;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
 
-.incorrect {
-    color: #e53e3e;
-    font-weight: 600;
+.btn-danger {
+    background-color: var(--danger);
+    color: white;
+    transition: all 0.3s ease;
 }
 
-.progress-bar {
-    height: 12px;
-    background-color: #e2e8f0;
-    border-radius: 6px;
+.btn-danger:hover {
+    background-color: #DC2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
 .progress-fill {
-    height: 100%;
-    background: linear-gradient(to right, #ed8936, #f6ad55);
-}
-
-.slider-container {
-    position: relative;
-    min-height: 320px;
-    margin-bottom: 24px;
-}
-
-.hidden {
-    display: none;
-}
-
-.visible {
-    display: block;
-}
-
-.summary-item {
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    background-color: #f7fafc;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.summary-item:hover {
-    background-color: #edf2f7;
-}
-
-.container {
-    max-width: 900px;
-}
-
-h1 {
-    font-weight: 800;
-    color: #2d3748;
-    font-size: 2.5rem;
-}
-
-p {
-    color: #4a5568;
-    font-size: 1.1rem;
-}
-
-#lessonSelector {
-    padding: 12px;
-    border: 2px solid #ed8936;
-    border-radius: 8px;
-    background-color: #ffffff;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-#lessonSelector:focus {
-    border-color: #dd6b20;
-    outline: none;
-}
-
-#quizContainer {
-    display: none;
-}
-
-#questionTimer {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #e53e3e;
-    margin-top: 12px;
-}
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-fade-in {
-    animation: fade-in 0.7s;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-.font-inter {
-    font-family: 'Inter', sans-serif;
-}
-
-.progress-bar {
     height: 8px;
-    background-color: #e2e8f0;
-    border-radius: 9999px;
-    overflow: hidden;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    transition: width 0.5s ease;
 }
 
-.progress-fill {
-    height: 100%;
-    background-color: #ed8936;
-    transition: width 0.4s ease-in-out;
+.floating-btn {
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+    transition: all 0.3s ease;
 }
 
-.outline-box {
-    border: 2px solid #ed8936;
-    border-radius: 12px;
-    padding: 24px;
-    background-color: #ffffff;
+.floating-btn:hover {
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+    transform: translateY(-3px);
+}
+
+.option-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.option-card:hover {
+    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
 }
 
-.outline-box label {
-    display: block;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: #1a202c;
+.option-card.selected {
+    border: 2px solid var(--primary);
+    background-color: #FFFBEB;
 }
 
-.outline-box input[type="radio"] {
-    accent-color: #ed8936;
-    margin-right: 10px;
-    transform: scale(1.2);
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-.outline-box label:hover {
-    color: #ed8936;
-}
-
-.correct {
-    color: #38a169;
-    font-weight: 600;
-}
-
-.incorrect {
-    color: #e53e3e;
-    font-weight: 600;
-}
-
-.slider-container {
-    position: relative;
-    min-height: 320px;
-    margin-bottom: 24px;
-}
-
-.hidden {
-    display: none;
-}
-
-.visible {
-    display: block;
-}
-
-.summary-item {
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    background-color: #f7fafc;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.summary-item:hover {
-    background-color: #edf2f7;
-}
-
-@keyframes fade-in {
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
     }
 
     to {
@@ -260,18 +114,35 @@ p {
     }
 }
 
-.animate-fade-in {
-    animation: fade-in 0.7s ease-out;
+.pulse {
+    animation: pulse 2s infinite;
 }
 
-@media (max-width: 640px) {
-    .flex.space-x-4 {
-        flex-direction: column;
-        space-x: 0;
-        space-y: 1rem;
+@keyframes pulse {
+    0% {
+        transform: scale(1);
     }
 
-    #lessonSelector {
-        width: 100%;
+    50% {
+        transform: scale(1.05);
     }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#btn-menu:checked~.dropdown-content {
+    display: block;
 }

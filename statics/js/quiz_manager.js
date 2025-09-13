@@ -327,15 +327,13 @@ class QuizManager {
 
     // Métodos para manejo de texto a voz
     handleFloatingReadButton() {
-        this.startReadingContext();
-
-        // if (this.speechManager.isPaused) {
-        //     this.speechManager.handleToggle();
-        // } else if (this.speechManager.isReading) {
-        //     this.speechManager.handleToggle();
-        // } else {
-        //     this.startReadingContext();
-        // }
+        if (this.speechManager.isPaused) {
+            this.speechManager.handleToggle();
+        } else if (this.speechManager.isReading) {
+            this.speechManager.handleToggle();
+        } else {
+            this.startReadingContext();
+        }
     }
 
     async startReadingContext() {

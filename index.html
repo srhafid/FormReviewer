@@ -12,187 +12,288 @@
     <link rel="stylesheet" href="./statics/css/index.css">
 </head>
 
-<body class="bg-[#f0f4f8] min-h-screen flex flex-col font-inter text-[#1a202c]">
-    <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-        <h1 id="header-smoth-scroll" class="text-4xl font-bold text-center mb-6 text-[#ed8936]">Cuestionario de Repasos
-            Customizados</h1>
-        <p class="text-center mb-8 text-lg text-gray-700">Selecciona una lección desde la base de datos local para
-            comenzar el cuestionario.</p>
-
-        <div class="text-center mb-8">
-            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <select id="lessonSelector"
-                    class="w-72 p-3 border-2 border-[#ed8936] rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 transition">
-                    <option value="">-- Selecciona una lección --</option>
-                </select>
-                <button id="loadLessonBtn"
-                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Cargar
-                    Lección</button>
-                <button id="deleteLessonBtn"
-                    class="px-4 py-2 bg-red-600 text-white rounded-lg font-bold shadow-md hover:bg-red-700 transition duration-200">Eliminar
-                    Lección</button>
-                <button id="deleteAllDbBtn"
-                    class="px-4 py-2 bg-red-800 text-white rounded-lg font-bold shadow-md hover:bg-red-900 transition duration-200">Eliminar
-                    Toda la DB</button>
-                <button id="generateQuizBtn"
-                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Generar
-                    Nuevo Cuestionario</button>
-                <button id="loadFromDbBtn"
-                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Cargar
-                    desde DB</button>
-                <button id="exportDbBtn"
-                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Exportar
-                    DB</button>
-                <label for="importDbBtn"
-                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 cursor-pointer">
-                    Importar DB
-                    <input type="file" id="importDbBtn" accept=".json" class="hidden">
-                </label>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm py-4">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-[var(--primary)]">CyberQuiz</h1>
+            <div class="flex items-center space-x-2">
+                <div class="dropdown relative">
+                    <input type="checkbox" id="btn-menu" style="display: none;">
+                    <label for="btn-menu"
+                        class="px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-orange-50 transition menu cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        Menú
+                    </label>
+                    <div class="dropdown-content p-2 mt-1 right-0">
+                        <button id="exportDbBtn"
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 rounded-md transition">Exportar
+                            DB</button>
+                        <label for="importDbBtn"
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 rounded-md transition block cursor-pointer">
+                            Importar DB
+                            <input type="file" id="importDbBtn" accept=".json" class="hidden">
+                        </label>
+                        <button id="deleteAllDbBtn"
+                            class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition">Eliminar
+                            Toda la DB</button>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="lessonContext"
-            class="max-w-2xl mx-auto mb-8 hidden bg-white rounded-lg shadow-lg p-8 text-lg text-gray-700 animate-fade-in">
-        </div>
-        <div class="text-center mb-8">
-            <button id="showDifficultyBtn"
-                class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 hidden">Iniciar
-                Cuestionario</button>
+    </header>
+
+    <main class="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold mb-4 text-[var(--dark)]">Cuestionario de Repasos Customizados</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Selecciona una lección desde la base de datos local para
+                comenzar el cuestionario interactivo de ciberseguridad.</p>
         </div>
 
-        <div id="difficultySelector" class="text-center mb-8 hidden">
-            <p class="text-lg mb-4 text-gray-700">Selecciona el nivel de dificultad:</p>
-            <div class="outline-box">
-                <label><input type="radio" name="difficulty" value="easy" class="mr-2"> Fácil (30s por
-                    pregunta)</label><br>
-                <label><input type="radio" name="difficulty" value="medium" class="mr-2"> Medio (20s por
-                    pregunta)</label><br>
-                <label><input type="radio" name="difficulty" value="hard" class="mr-2"> Difícil (10s por
-                    pregunta)</label><br>
+        <div class="flex justify-center gap-6 mb-10">
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[var(--primary)]" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Seleccionar Lección
+                </h2>
+                <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                    <select id="lessonSelector"
+                        class="flex-1 p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition">
+                        <option value="">-- Selecciona una lección --</option>
+                    </select>
+                    <button id="loadLessonBtn"
+                        class="btn-primary px-4 py-3 rounded-lg font-semibold whitespace-nowrap">Cargar Lección</button>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button id="deleteLessonBtn" class="btn-danger px-4 py-2 rounded-lg font-semibold text-sm">Eliminar
+                        Lección</button>
+                    <button id="generateQuizBtn" class="btn-primary px-4 py-2 rounded-lg font-semibold text-sm">Generar
+                        Nuevo Cuestionario</button>
+                    <button id="loadFromDbBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold text-sm">Cargar
+                        desde DB</button>
+                </div>
             </div>
-            <button id="startQuizBtn"
-                class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] mt-8 transition duration-200 disabled:opacity-50"
-                disabled>Comenzar Cuestionario</button>
+
+        </div>
+
+        <div id="lessonContext" class="card p-6 mb-8 hidden fade-in">
+            <h2 class="text-xl font-semibold mb-4 text-[var(--dark)]">Contexto de la Lección</h2>
+            <div class="text-gray-700 leading-relaxed"></div>
+        </div>
+
+        <div class="text-center mb-8">
+            <button id="showDifficultyBtn" class="btn-primary px-6 py-3 rounded-lg font-semibold text-lg hidden pulse">
+                Iniciar Cuestionario
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+        </div>
+
+        <div id="difficultySelector" class="card p-6 mb-8 hidden fade-in">
+            <h2 class="text-xl font-semibold mb-6 text-center text-[var(--dark)]">Selecciona el nivel de dificultad</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="option-card p-5 border-2 border-gray-200 rounded-xl text-center cursor-pointer transition">
+                    <input type="radio" name="difficulty" value="easy" id="difficulty-easy" class="hidden">
+                    <label for="difficulty-easy" class="cursor-pointer">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905a3.61 3.61 0 01-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-1">Fácil</h3>
+                        <p class="text-gray-600 text-sm">30s por pregunta</p>
+                    </label>
+                </div>
+                <div class="option-card p-5 border-2 border-gray-200 rounded-xl text-center cursor-pointer transition">
+                    <input type="radio" name="difficulty" value="medium" id="difficulty-medium" class="hidden">
+                    <label for="difficulty-medium" class="cursor-pointer">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-1">Medio</h3>
+                        <p class="text-gray-600 text-sm">20s por pregunta</p>
+                    </label>
+                </div>
+                <div class="option-card p-5 border-2 border-gray-200 rounded-xl text-center cursor-pointer transition">
+                    <input type="radio" name="difficulty" value="hard" id="difficulty-hard" class="hidden">
+                    <label for="difficulty-hard" class="cursor-pointer">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 14V3L8 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-1">Difícil</h3>
+                        <p class="text-gray-600 text-sm">10s por pregunta</p>
+                    </label>
+                </div>
+            </div>
+            <div class="text-center">
+                <button id="startQuizBtn"
+                    class="btn-primary px-8 py-3 rounded-lg font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled>
+                    Comenzar Cuestionario
+                </button>
+            </div>
         </div>
 
         <div id="quizContainer" class="hidden">
-            <p class="text-center mb-8 text-lg text-gray-700">¡Responde rápido! <span id="timePerQuestion"></span>¡Gana
-                puntos y mantén tu racha!</p>
-
-            <div class="mb-8 bg-white p-6 rounded-lg shadow-sm border border-[#ed8936]/10">
-                <div class="flex justify-between mb-4 text-sm font-medium text-gray-700">
-                    <span>Puntos: <span id="points" class="text-[#ed8936] font-semibold">0</span></span>
-                    <span>Racha: <span id="streak" class="text-[#ed8936] font-semibold">0</span>x</span>
-                    <span id="timer" class="text-[#ed8936] font-semibold">Tiempo Total: 10:00</span>
-                    <span>Pregunta: <span id="currentQuestion" class="text-[#ed8936] font-semibold">1</span> / <span
-                            id="totalQuestions" class="text-[#ed8936] font-semibold">0</span></span>
+            <div class="card p-6 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-[var(--dark)] mb-4 md:mb-0">¡Responde rápido!</h2>
+                    <div class="flex items-center bg-orange-50 px-4 py-2 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[var(--primary)] mr-2" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="timePerQuestion" class="font-semibold text-[var(--primary)]"></span>
+                    </div>
                 </div>
-                <div class="progress-bar">
-                    <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+
+                <div class="mb-6 bg-gray-50 p-5 rounded-xl">
+                    <div class="flex flex-wrap justify-between mb-4 text-sm font-medium text-gray-700">
+                        <span class="mb-2 md:mb-0">Puntos: <span id="points"
+                                class="text-[var(--primary)] font-bold">0</span></span>
+                        <span class="mb-2 md:mb-0">Racha: <span id="streak"
+                                class="text-[var(--primary)] font-bold">0</span>x</span>
+                        <span id="timer" class="mb-2 md:mb-0 text-[var(--primary)] font-bold">Tiempo: 10:00</span>
+                        <span>Pregunta: <span id="currentQuestion"
+                                class="text-[var(--primary)] font-bold">1</span>/<span id="totalQuestions"
+                                class="text-[var(--primary)] font-bold">0</span></span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progressFill" class="progress-fill h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="slider-container mb-8">
+                    <form id="quizForm"></form>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button type="button" id="submitBtn"
+                        class="btn-primary px-6 py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                        Evaluar Respuestas
+                    </button>
+                    <button type="button" id="resetBtn"
+                        class="px-6 py-3 border border-[var(--primary)] text-[var(--primary)] rounded-lg font-semibold hover:bg-[var(--primary)] hover:text-white transition">
+                        Reiniciar Juego
+                    </button>
                 </div>
             </div>
 
-            <div class="slider-container">
-                <form id="quizForm"></form>
-            </div>
-
-            <div class="text-center space-x-4">
-                <button type="button" id="submitBtn"
-                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 disabled:opacity-50"
-                    disabled>Evaluar Respuestas</button>
-                <button type="button" id="resetBtn"
-                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Reiniciar
-                    Juego</button>
-            </div>
-            <div id="score" class="text-center mt-8 text-xl font-bold text-[#ed8936]"></div>
-            <div id="summary" class="mt-12 max-w-md mx-auto"></div>
+            <div id="score" class="text-center mt-8 text-2xl font-bold text-[var(--primary)] hidden"></div>
+            <div id="summary" class="mt-8 max-w-2xl mx-auto"></div>
         </div>
 
         <!-- Modal for generating quiz -->
-        <div id="generateQuizModal" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center hidden">
-            <div class="bg-white rounded-lg p-6 max-w-lg w-full shadow-lg">
-                <h2 class="text-2xl font-bold mb-4 text-[#ed8936]">Generar Nuevo Cuestionario</h2>
+        <div id="generateQuizModal"
+            class="fixed inset-0 bg-gray-900/70 flex items-center justify-center hidden z-50 px-4">
+            <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-xl">
+                <h2 class="text-2xl font-bold mb-4 text-[var(--primary)]">Generar Nuevo Cuestionario</h2>
                 <form id="generateQuizForm" class="space-y-4">
-                    <div class="mb-4">
+                    <div>
                         <label for="quizContext" class="block text-lg font-medium mb-2 text-gray-700">Contexto del
                             Cuestionario</label>
                         <textarea id="quizContext"
-                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 h-24 resize-none"
+                            class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] h-32 resize-none"
                             placeholder="Ingresa el contexto del cuestionario..." required></textarea>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <label for="numQuestions" class="block text-lg font-medium mb-2 text-gray-700">Número de
                             Preguntas</label>
                         <input type="number" id="numQuestions"
-                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50"
+                            class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                             min="1" max="50" value="5" required>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <label class="block text-lg font-medium mb-2 text-gray-700">Longitud de las
                             Explicaciones</label>
                         <select id="explanationLength"
-                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50"
+                            class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                             required>
                             <option value="corta">Corta (1-2 oraciones)</option>
                             <option value="mediana">Mediana (3-4 oraciones)</option>
                             <option value="larga">Larga (5+ oraciones)</option>
                         </select>
                     </div>
-                    <div class="flex justify-end space-x-3">
+                    <div class="flex justify-end space-x-3 pt-4">
                         <button type="button" id="cancelModalBtn"
-                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 font-bold mr-2">Cancelar</button>
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">Cancelar</button>
                         <button type="submit" id="copyPromptBtn"
-                            class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Copiar
-                            Prompt</button>
+                            class="btn-primary px-4 py-2 rounded-lg font-semibold">Copiar Prompt</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- Modal for loading JSON from textarea -->
-        <div id="loadJsonModal" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center hidden">
-            <div class="bg-white rounded-lg p-6 max-w-4xl w-full shadow-lg">
-                <h2 class="text-2xl font-bold mb-4 text-[#ed8936]">Cargar JSON desde DB</h2>
+        <div id="loadJsonModal" class="fixed inset-0 bg-gray-900/70 flex items-center justify-center hidden z-50 px-4">
+            <div class="bg-white rounded-xl p-6 max-w-2xl w-full shadow-xl">
+                <h2 class="text-2xl font-bold mb-4 text-[var(--primary)]">Cargar JSON desde DB</h2>
                 <div class="space-y-4">
-                    <div class="mb-4">
+                    <div>
                         <label for="jsonInput" class="block text-lg font-medium mb-2 text-gray-700">Pega el JSON
                             aquí</label>
                         <textarea id="jsonInput"
-                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 h-96 font-mono text-sm bg-gray-50"
+                            class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] h-64 font-mono text-sm bg-gray-50"
                             placeholder="Pega el contenido JSON generado por la IA aquí..."></textarea>
                     </div>
-                    <div class="mb-4">
+                    <div>
                         <label for="lessonName" class="block text-lg font-medium mb-2 text-gray-700">Nombre de la
                             Lección (opcional)</label>
                         <input type="text" id="lessonName"
-                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50"
+                            class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                             placeholder="Ej: Mi Lección Personalizada">
                     </div>
-                    <div class="flex justify-end space-x-3">
+                    <div class="flex justify-end space-x-3 pt-4">
                         <button type="button" id="cancelLoadJsonBtn"
-                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 font-bold mr-2">Cancelar</button>
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">Cancelar</button>
                         <button type="button" id="saveJsonBtn"
-                            class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Guardar
-                            en DB</button>
+                            class="btn-primary px-4 py-2 rounded-lg font-semibold">Guardar en DB</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <button id="floatingReadBtn"
-            class="fixed bottom-8 right-8 z-50 bg-[#ed8936] text-white rounded-full shadow-lg px-6 py-3 font-bold text-lg flex items-center hidden">
-            <svg id="floatingReadIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none"
+            class="fixed bottom-8 right-8 z-40 bg-[var(--primary)] text-white rounded-full shadow-lg px-5 py-4 font-semibold flex items-center hidden floating-btn">
+            <svg id="floatingReadIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                 viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
             <span id="floatingReadText">Leer contexto</span>
         </button>
-    </div>
+    </main>
 
-    <footer class="bg-[#ed8936] py-4 w-full">
-        <div class="w-full flex justify-center items-center">
-            <a href="https://github.com/srhafid/FormReviewer" class="block hover:cursor-pointer" target="_blank">
-                <svg class="text-white w-8 h-8 hover:text-[#c0632a] transition duration-200"
-                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <footer class="bg-[var(--primary)] py-6 mt-12">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-white mb-4 md:mb-0">© 2023 CyberQuiz - Aprende ciberseguridad de forma divertida</p>
+            <a href="https://github.com/srhafid/FormReviewer" class="text-white hover:text-[var(--light)] transition"
+                target="_blank">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    viewBox="0 0 16 16">
                     <path
                         d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
                 </svg>
@@ -200,7 +301,6 @@
         </div>
     </footer>
 
-    
     <script src="./statics/js/modal-prompt-generate.js"></script>
     <script src="./statics/js/database_manager.js"></script>
     <script src="./statics/js/timer_manager.js"></script>

@@ -1,19 +1,22 @@
 class SpeechManager {
     constructor() {
         this.utterance = null;
-        this.queue = []; // Cola para fragmentos de texto
-        this.currentUtteranceIndex = 0; // Índice del fragmento actual
+        this.queue = []; 
+        this.currentUtteranceIndex = 0;
         this.isReading = false;
         this.isPaused = false;
         this.voicesLoaded = false;
-        // Pre-carga voces al inicio para evitar delays
+        
+        // Pre-carga voces al inicio
         window.speechSynthesis.getVoices();
+        
+        // Asegurar que el contexto de 'this' se mantenga
+        this.handleToggle = this.handleToggle.bind(this);
     }
 
-    // Divide el texto en fragmentos manejables
     splitTextIntoChunks(text) {
-        const maxWordsPerChunk = 100; // Límite de palabras por fragmento
-        const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]; // Divide por oraciones
+        const maxWordsPerChunk = 100;
+        const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
         const chunks = [];
         let currentChunk = '';
         let wordCount = 0;
@@ -41,7 +44,6 @@ class SpeechManager {
             return;
         }
 
-        // Verifica interacción para evitar bloqueo de autoplay
         if (document.visibilityState !== 'visible' || !document.hasFocus()) {
             console.warn('Pestaña no activa o sin foco. Haz clic para activar.');
             return;
@@ -49,19 +51,19 @@ class SpeechManager {
 
         console.log('Iniciando lectura. Texto original:', contextParagraphs.join(' '));
 
-        // Cancel any ongoing speech
+        // Cancelar cualquier síntesis en curso
         window.speechSynthesis.cancel();
-        this.queue = []; // Limpia la cola
+        this.queue = [];
         this.currentUtteranceIndex = 0;
+        this.isReading = false;
+        this.isPaused = false;
 
-        // Prepare text
         const cleanText = this.cleanInclusiveLanguage(contextParagraphs.join(' '));
         const textChunks = this.splitTextIntoChunks(cleanText);
 
-        // Crea utterances para cada fragmento
         this.queue = textChunks.map(chunk => {
             const utterance = new SpeechSynthesisUtterance(chunk);
-            utterance.rate = 0.85; // Tono calmado
+            utterance.rate = 0.85;
             utterance.pitch = 1.0;
             utterance.lang = 'es-ES';
             utterance.volume = 0.9;
@@ -73,8 +75,7 @@ class SpeechManager {
                 console.log('Todos los fragmentos leídos.');
                 this.isReading = false;
                 this.isPaused = false;
-                const textElement = document.getElementById('floatingReadText');
-                if (textElement) textElement.innerText = 'Leer contexto';
+                this.updateButtonText('Leer contexto');
                 return;
             }
 
@@ -83,20 +84,18 @@ class SpeechManager {
             this.setupSpeechEvents();
 
             console.log(`Reproduciendo fragmento ${this.currentUtteranceIndex + 1}/${this.queue.length}:`, this.utterance.text);
-            const pending = window.speechSynthesis.pending;
-            const speaking = window.speechSynthesis.speaking;
-            console.log('Estado antes de speak: pending=', pending, 'speaking=', speaking);
-
+            
+            // Marcar como leyendo ANTES de speak()
+            this.isReading = true;
+            this.isPaused = false;
+            this.updateButtonText('Pausar');
+            
             window.speechSynthesis.speak(this.utterance);
-
-            setTimeout(() => {
-                console.log('Estado después de speak: pending=', window.speechSynthesis.pending, 'speaking=', window.speechSynthesis.speaking);
-            }, 500);
         };
 
-        // Ensure voices are loaded
         const voices = window.speechSynthesis.getVoices();
         console.log('Voces iniciales:', voices.length);
+        
         if (voices.length === 0 && !this.voicesLoaded) {
             console.log('Esperando carga de voces...');
             window.speechSynthesis.onvoiceschanged = () => {
@@ -112,22 +111,47 @@ class SpeechManager {
     }
 
     handleToggle() {
+        console.log('🔄 handleToggle llamado. Estado:', { 
+            isReading: this.isReading, 
+            isPaused: this.isPaused,
+            hasUtterance: !!this.utterance,
+            synthesisSpeaking: window.speechSynthesis.speaking,
+            synthesisPaused: window.speechSynthesis.paused
+        });
+
+        // Si no hay utterance activa, no hacer nada
         if (!this.utterance) {
-            console.warn('No hay utterance activa para pausar/reanudar.');
+            console.warn('❌ No hay utterance activa para pausar/reanudar.');
             return;
         }
 
-        if (this.isPaused) {
-            console.log('Reanudando lectura...');
+        // Si está pausado, reanudar
+        if (this.isPaused && window.speechSynthesis.paused) {
+            console.log('▶️ Reanudando lectura...');
             window.speechSynthesis.resume();
             this.isPaused = false;
             this.isReading = true;
-        } else if (this.isReading) {
-            console.log('Pausando lectura...');
+            this.updateButtonText('Pausar');
+            return;
+        }
+
+        // Si está leyendo (y no pausado), pausar
+        if (this.isReading && window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+            console.log('⏸️ Pausando lectura...');
             window.speechSynthesis.pause();
             this.isPaused = true;
-        } else {
-            console.warn('No hay lectura activa para pausar.');
+            this.updateButtonText('Reanudar');
+            return;
+        }
+
+        console.warn('⚠️ Estado inconsistente o no se puede pausar/reanudar');
+    }
+
+    // Método auxiliar para actualizar el texto del botón
+    updateButtonText(text) {
+        const textElement = document.getElementById('floatingReadText');
+        if (textElement) {
+            textElement.innerText = text;
         }
     }
 
@@ -162,9 +186,9 @@ class SpeechManager {
                     return conversions[match.toLowerCase()] || match.replace(/e([s]?)$/, 'o$1');
                 })
                 .replace(/\b(él o ella|ella o él)\b/gi, 'él')
-                .replace(/\b(nosotros y nosotras|nosotras y nosotros)\b/gi, 'nosotros')
+                .replace(/\b(nosotros y nosotras|nosotras y nosotras)\b/gi, 'nosotros')
                 .replace(/\b(ellos y ellas|ellas y ellos)\b/gi, 'ellos')
-                .replace(/\s+/g, ' ') // Normalize multiple spaces
+                .replace(/\s+/g, ' ')
                 .trim();
             console.log('Texto limpiado exitosamente.');
             return cleaned;
@@ -205,28 +229,23 @@ class SpeechManager {
     }
 
     setupSpeechEvents() {
-        const textElement = document.getElementById('floatingReadText');
-        if (!textElement) {
-            console.warn('Text element not found for speech events.');
-        }
-
         this.utterance.onstart = () => {
             console.log(`🟢 EVENTO: Empezó fragmento ${this.currentUtteranceIndex + 1}/${this.queue.length}`);
             this.isReading = true;
             this.isPaused = false;
-            if (textElement) textElement.innerText = 'Pausar';
+            this.updateButtonText('Pausar');
         };
 
         this.utterance.onpause = () => {
             console.log('🟡 EVENTO: Pausado');
             this.isPaused = true;
-            if (textElement) textElement.innerText = 'Reanudar';
+            this.updateButtonText('Reanudar');
         };
 
         this.utterance.onresume = () => {
             console.log('🟢 EVENTO: Reanudado');
             this.isPaused = false;
-            if (textElement) textElement.innerText = 'Pausar';
+            this.updateButtonText('Pausar');
         };
 
         this.utterance.onend = () => {
@@ -234,14 +253,20 @@ class SpeechManager {
             this.isReading = false;
             this.isPaused = false;
             this.currentUtteranceIndex++;
+            
             if (this.currentUtteranceIndex < this.queue.length) {
-                // Reproduce el siguiente fragmento
                 this.utterance = this.queue[this.currentUtteranceIndex];
                 this.selectBestSpanishVoice();
                 this.setupSpeechEvents();
+                
+                // Actualizar estado antes de hablar
+                this.isReading = true;
+                this.isPaused = false;
+                this.updateButtonText('Pausar');
+                
                 window.speechSynthesis.speak(this.utterance);
             } else {
-                if (textElement) textElement.innerText = 'Leer contexto';
+                this.updateButtonText('Leer contexto');
             }
         };
 
@@ -250,23 +275,27 @@ class SpeechManager {
             this.isReading = false;
             this.isPaused = false;
             this.currentUtteranceIndex++;
+            
             if (this.currentUtteranceIndex < this.queue.length) {
-                // Intenta el siguiente fragmento
                 this.utterance = this.queue[this.currentUtteranceIndex];
                 this.selectBestSpanishVoice();
                 this.setupSpeechEvents();
                 window.speechSynthesis.speak(this.utterance);
-            } else if (textElement) {
-                textElement.innerText = 'Leer contexto';
+            } else {
+                this.updateButtonText('Leer contexto');
             }
         };
 
-        // Chequeo extendido para delays de voces
+        // Timeout de seguridad
         setTimeout(() => {
-            if (this.isReading === false && this.isPaused === false && this.currentUtteranceIndex === 0) {
+            if (!this.isReading && !this.isPaused && this.currentUtteranceIndex === 0) {
                 console.error('❌ No inició la lectura después de 5s. Reintentando...');
                 window.speechSynthesis.cancel();
-                setTimeout(() => window.speechSynthesis.speak(this.utterance), 1000);
+                setTimeout(() => {
+                    this.isReading = true;
+                    this.updateButtonText('Pausar');
+                    window.speechSynthesis.speak(this.utterance);
+                }, 1000);
             }
         }, 5000);
     }
