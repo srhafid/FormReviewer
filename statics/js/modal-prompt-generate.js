@@ -69,11 +69,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 '**Instrucciones de contenido:**\n' +
                 '- Basa todo el contenido estrictamente en el contexto proporcionado\n' +
                 '- Genera exactamente el número especificado de preguntas\n' +
-                '- Variedad de tipos de preguntas (conceptuales, aplicativas, detalle)\n' +
+                '- Las preguntas deben ser de alta dificultad, requiriendo análisis profundo, comprensión avanzada y atención a detalles sutiles del contexto\n' +
+                '- Las opciones de respuesta deben ser plausibles, confusas y retadoras, pero siempre con sentido dentro del contexto\n' +
+                '- Variedad de tipos de preguntas (conceptuales, aplicativas, detalle, inferenciales)\n' +
                 '- Solo una opción correcta por pregunta (correct: true)\n' +
                 '- Explicaciones con longitud apropiada: corta(1-2 oraciones), mediana(3-4), larga(5+)\n' +
-                '- Opciones incorrectas deben ser plausibles pero erróneas\n' +
-                '- Lenguaje claro y profesional acorde al tema';
+                '- Opciones incorrectas deben ser plausibles pero erróneas y diseñadas para confundir a quien no domine el tema\n' +
+                '- Lenguaje claro, profesional y desafiante acorde al tema\n' +
+                '- PRIORIZA SIEMPRE EL APARTADO TÉCNICO, científico, de ingeniería o relacionado a ciencias. Evita preguntas arbitrarias sobre presentaciones, nombres, datos anecdóticos o superficiales. El enfoque debe ser en lo técnico y conceptual relevante al área de estudio.';
 
             // Copy prompt to clipboard
             navigator.clipboard.writeText(prompt).then(function () {

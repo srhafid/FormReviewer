@@ -14,45 +14,77 @@
 
 <body class="bg-[#f0f4f8] min-h-screen flex flex-col font-inter text-[#1a202c]">
     <div class="flex-1 max-w-4xl mx-auto px-4 py-8">
-        <h1 id="header-smoth-scroll" class="text-4xl font-bold text-center mb-6 text-[#ed8936]">Cuestionario de Repasos Customizados</h1>
-        <p class="text-center mb-8 text-lg text-gray-700">Selecciona una lección para cargar las preguntas desde un archivo JSON y comenzar el cuestionario.</p>
+        <h1 id="header-smoth-scroll" class="text-4xl font-bold text-center mb-6 text-[#ed8936]">Cuestionario de Repasos
+            Customizados</h1>
+        <p class="text-center mb-8 text-lg text-gray-700">Selecciona una lección desde la base de datos local para
+            comenzar el cuestionario.</p>
 
         <div class="text-center mb-8">
             <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <select id="lessonSelector" class="w-72 p-3 border-2 border-[#ed8936] rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 transition">
+                <select id="lessonSelector"
+                    class="w-72 p-3 border-2 border-[#ed8936] rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 transition">
                     <option value="">-- Selecciona una lección --</option>
-                    <option value="example.json">Example</option>
                 </select>
-                <button id="loadLessonBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Cargar Lección</button>
-                <button id="generateQuizBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 ml-4">Generar Nuevo Cuestionario</button>
-                <button id="loadFromDbBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 ml-4">Cargar desde DB</button>
+                <button id="loadLessonBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Cargar
+                    Lección</button>
+                <button id="deleteLessonBtn"
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg font-bold shadow-md hover:bg-red-700 transition duration-200">Eliminar
+                    Lección</button>
+                <button id="deleteAllDbBtn"
+                    class="px-4 py-2 bg-red-800 text-white rounded-lg font-bold shadow-md hover:bg-red-900 transition duration-200">Eliminar
+                    Toda la DB</button>
+                <button id="generateQuizBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Generar
+                    Nuevo Cuestionario</button>
+                <button id="loadFromDbBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Cargar
+                    desde DB</button>
+                <button id="exportDbBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Exportar
+                    DB</button>
+                <label for="importDbBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 cursor-pointer">
+                    Importar DB
+                    <input type="file" id="importDbBtn" accept=".json" class="hidden">
+                </label>
             </div>
         </div>
-        <div id="lessonContext" class="max-w-2xl mx-auto mb-8 hidden bg-white rounded-lg shadow-lg p-8 text-lg text-gray-700 animate-fade-in">
+        <div id="lessonContext"
+            class="max-w-2xl mx-auto mb-8 hidden bg-white rounded-lg shadow-lg p-8 text-lg text-gray-700 animate-fade-in">
         </div>
         <div class="text-center mb-8">
-            <button id="showDifficultyBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 hidden">Iniciar Cuestionario</button>
+            <button id="showDifficultyBtn"
+                class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 hidden">Iniciar
+                Cuestionario</button>
         </div>
 
         <div id="difficultySelector" class="text-center mb-8 hidden">
             <p class="text-lg mb-4 text-gray-700">Selecciona el nivel de dificultad:</p>
             <div class="outline-box">
-                <label><input type="radio" name="difficulty" value="easy" class="mr-2"> Fácil (30s por pregunta)</label><br>
-                <label><input type="radio" name="difficulty" value="medium" class="mr-2"> Medio (20s por pregunta)</label><br>
-                <label><input type="radio" name="difficulty" value="hard" class="mr-2"> Difícil (10s por pregunta)</label><br>
+                <label><input type="radio" name="difficulty" value="easy" class="mr-2"> Fácil (30s por
+                    pregunta)</label><br>
+                <label><input type="radio" name="difficulty" value="medium" class="mr-2"> Medio (20s por
+                    pregunta)</label><br>
+                <label><input type="radio" name="difficulty" value="hard" class="mr-2"> Difícil (10s por
+                    pregunta)</label><br>
             </div>
-            <button id="startQuizBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] mt-8 transition duration-200 disabled:opacity-50" disabled>Comenzar Cuestionario</button>
+            <button id="startQuizBtn"
+                class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] mt-8 transition duration-200 disabled:opacity-50"
+                disabled>Comenzar Cuestionario</button>
         </div>
 
         <div id="quizContainer" class="hidden">
-            <p class="text-center mb-8 text-lg text-gray-700">¡Responde rápido! <span id="timePerQuestion"></span>¡Gana puntos y mantén tu racha!</p>
+            <p class="text-center mb-8 text-lg text-gray-700">¡Responde rápido! <span id="timePerQuestion"></span>¡Gana
+                puntos y mantén tu racha!</p>
 
             <div class="mb-8 bg-white p-6 rounded-lg shadow-sm border border-[#ed8936]/10">
                 <div class="flex justify-between mb-4 text-sm font-medium text-gray-700">
                     <span>Puntos: <span id="points" class="text-[#ed8936] font-semibold">0</span></span>
                     <span>Racha: <span id="streak" class="text-[#ed8936] font-semibold">0</span>x</span>
                     <span id="timer" class="text-[#ed8936] font-semibold">Tiempo Total: 10:00</span>
-                    <span>Pregunta: <span id="currentQuestion" class="text-[#ed8936] font-semibold">1</span> / <span id="totalQuestions" class="text-[#ed8936] font-semibold">0</span></span>
+                    <span>Pregunta: <span id="currentQuestion" class="text-[#ed8936] font-semibold">1</span> / <span
+                            id="totalQuestions" class="text-[#ed8936] font-semibold">0</span></span>
                 </div>
                 <div class="progress-bar">
                     <div id="progressFill" class="progress-fill" style="width: 0%"></div>
@@ -64,8 +96,12 @@
             </div>
 
             <div class="text-center space-x-4">
-                <button type="button" id="submitBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 disabled:opacity-50" disabled>Evaluar Respuestas</button>
-                <button type="button" id="resetBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Reiniciar Juego</button>
+                <button type="button" id="submitBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200 disabled:opacity-50"
+                    disabled>Evaluar Respuestas</button>
+                <button type="button" id="resetBtn"
+                    class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Reiniciar
+                    Juego</button>
             </div>
             <div id="score" class="text-center mt-8 text-xl font-bold text-[#ed8936]"></div>
             <div id="summary" class="mt-12 max-w-md mx-auto"></div>
@@ -77,24 +113,36 @@
                 <h2 class="text-2xl font-bold mb-4 text-[#ed8936]">Generar Nuevo Cuestionario</h2>
                 <form id="generateQuizForm" class="space-y-4">
                     <div class="mb-4">
-                        <label for="quizContext" class="block text-lg font-medium mb-2 text-gray-700">Contexto del Cuestionario</label>
-                        <textarea id="quizContext" class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 h-24 resize-none" placeholder="Ingresa el contexto del cuestionario..." required></textarea>
+                        <label for="quizContext" class="block text-lg font-medium mb-2 text-gray-700">Contexto del
+                            Cuestionario</label>
+                        <textarea id="quizContext"
+                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 h-24 resize-none"
+                            placeholder="Ingresa el contexto del cuestionario..." required></textarea>
                     </div>
                     <div class="mb-4">
-                        <label for="numQuestions" class="block text-lg font-medium mb-2 text-gray-700">Número de Preguntas</label>
-                        <input type="number" id="numQuestions" class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50" min="1" max="50" value="5" required>
+                        <label for="numQuestions" class="block text-lg font-medium mb-2 text-gray-700">Número de
+                            Preguntas</label>
+                        <input type="number" id="numQuestions"
+                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50"
+                            min="1" max="50" value="5" required>
                     </div>
                     <div class="mb-4">
-                        <label class="block text-lg font-medium mb-2 text-gray-700">Longitud de las Explicaciones</label>
-                        <select id="explanationLength" class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50" required>
+                        <label class="block text-lg font-medium mb-2 text-gray-700">Longitud de las
+                            Explicaciones</label>
+                        <select id="explanationLength"
+                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50"
+                            required>
                             <option value="corta">Corta (1-2 oraciones)</option>
                             <option value="mediana">Mediana (3-4 oraciones)</option>
                             <option value="larga">Larga (5+ oraciones)</option>
                         </select>
                     </div>
                     <div class="flex justify-end space-x-3">
-                        <button type="button" id="cancelModalBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 font-bold mr-2">Cancelar</button>
-                        <button type="submit" id="copyPromptBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Copiar Prompt</button>
+                        <button type="button" id="cancelModalBtn"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 font-bold mr-2">Cancelar</button>
+                        <button type="submit" id="copyPromptBtn"
+                            class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Copiar
+                            Prompt</button>
                     </div>
                 </form>
             </div>
@@ -106,23 +154,34 @@
                 <h2 class="text-2xl font-bold mb-4 text-[#ed8936]">Cargar JSON desde DB</h2>
                 <div class="space-y-4">
                     <div class="mb-4">
-                        <label for="jsonInput" class="block text-lg font-medium mb-2 text-gray-700">Pega el JSON aquí</label>
-                        <textarea id="jsonInput" class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 h-96 font-mono text-sm bg-gray-50" placeholder="Pega el contenido JSON generado por la IA aquí..."></textarea>
+                        <label for="jsonInput" class="block text-lg font-medium mb-2 text-gray-700">Pega el JSON
+                            aquí</label>
+                        <textarea id="jsonInput"
+                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50 h-96 font-mono text-sm bg-gray-50"
+                            placeholder="Pega el contenido JSON generado por la IA aquí..."></textarea>
                     </div>
                     <div class="mb-4">
-                        <label for="lessonName" class="block text-lg font-medium mb-2 text-gray-700">Nombre de la Lección (opcional)</label>
-                        <input type="text" id="lessonName" class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50" placeholder="Ej: Mi Lección Personalizada">
+                        <label for="lessonName" class="block text-lg font-medium mb-2 text-gray-700">Nombre de la
+                            Lección (opcional)</label>
+                        <input type="text" id="lessonName"
+                            class="w-full p-2 border border-[#ed8936]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed8936]/50"
+                            placeholder="Ej: Mi Lección Personalizada">
                     </div>
                     <div class="flex justify-end space-x-3">
-                        <button type="button" id="cancelLoadJsonBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 font-bold mr-2">Cancelar</button>
-                        <button type="button" id="saveJsonBtn" class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Guardar en DB</button>
+                        <button type="button" id="cancelLoadJsonBtn"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 font-bold mr-2">Cancelar</button>
+                        <button type="button" id="saveJsonBtn"
+                            class="px-4 py-2 bg-[#ed8936] text-white rounded-lg font-bold shadow-md hover:bg-[#c0632a] transition duration-200">Guardar
+                            en DB</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <button id="floatingReadBtn" class="fixed bottom-8 right-8 z-50 bg-[#ed8936] text-white rounded-full shadow-lg px-6 py-3 font-bold text-lg flex items-center hidden">
-            <svg id="floatingReadIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button id="floatingReadBtn"
+            class="fixed bottom-8 right-8 z-50 bg-[#ed8936] text-white rounded-full shadow-lg px-6 py-3 font-bold text-lg flex items-center hidden">
+            <svg id="floatingReadIcon" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
             <span id="floatingReadText">Leer contexto</span>
@@ -132,16 +191,25 @@
     <footer class="bg-[#ed8936] py-4 w-full">
         <div class="w-full flex justify-center items-center">
             <a href="https://github.com/srhafid/FormReviewer" class="block hover:cursor-pointer" target="_blank">
-                <svg class="text-white w-8 h-8 hover:text-[#c0632a] transition duration-200" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                <svg class="text-white w-8 h-8 hover:text-[#c0632a] transition duration-200"
+                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
                 </svg>
             </a>
         </div>
     </footer>
 
-    <script src="./statics/js/index.js"></script>
+    
     <script src="./statics/js/modal-prompt-generate.js"></script>
-
+    <script src="./statics/js/database_manager.js"></script>
+    <script src="./statics/js/timer_manager.js"></script>
+    <script src="./statics/js/speech_manager.js"></script>
+    <script src="./statics/js/question_manager.js"></script>
+    <script src="./statics/js/score_manager.js"></script>
+    <script src="./statics/js/ui_manager.js"></script>
+    <script src="./statics/js/quiz_manager.js"></script>
+    <script src="./statics/js/index.js"></script>
 </body>
 
 </html>
