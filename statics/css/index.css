@@ -15,8 +15,11 @@ body {
     font-family: 'Inter', sans-serif;
     background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
     min-height: 100vh;
+    user-select: none; /* Para la mayoría de navegadores modernos */
+    -webkit-user-select: none;  /* Chrome, Safari */
+    -moz-user-select: none;     /* Firefox */
+    -ms-user-select: none;      /* IE/Edge antiguos */
 }
-
 .btn-primary {
     background-color: var(--primary);
     color: white;

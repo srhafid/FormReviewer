@@ -1,3 +1,4 @@
+// Modified QuizManager class with progress saving functionality
 class QuizManager {
     constructor() {
         this.databaseManager = new DatabaseManager();
@@ -9,6 +10,7 @@ class QuizManager {
 
         this.selectedDifficulty = 'medium';
         this.contextParagraphs = [];
+        this.currentLessonName = ''; // To track the current lesson for saving progress
 
         this.init();
     }
@@ -91,6 +93,7 @@ class QuizManager {
         try {
             const lesson = await this.databaseManager.getLesson(selectedValue);
             if (lesson) {
+                this.currentLessonName = selectedValue; // Save current lesson name for progress
                 this.processQuestionData(lesson.data, lesson.filename);
                 this.uiManager.hideSelectors();
             } else {
@@ -246,11 +249,14 @@ class QuizManager {
         document.getElementById('submitBtn').disabled = false;
     }
 
-    submitQuiz() {
+    async submitQuiz() {  // Modified to save progress
         this.timerManager.clearAllTimers();
         const results = this.calculateResults();
         this.displayFinalResults(results);
         this.showSummary(results);
+
+        // Save progress to DB
+        await this.saveProgress(results);
     }
 
     calculateResults() {
@@ -323,6 +329,40 @@ class QuizManager {
         // Actualizar progreso
         const questionIndex = this.questionManager.getQuestionIndex(questionId);
         this.scoreManager.setCurrentQuestion(questionIndex + 1);
+    }
+
+    // New method to save progress
+    async saveProgress({ results, correctAnswers }) {
+        const errors = [];
+        const questions = this.questionManager.getShuffledQuestions();
+        questions.forEach((question, index) => {
+            if (!results[index].correct) {
+                errors.push({
+                    questionText: question.question,
+                    userAnswer: this.questionManager.getUserAnswer(question.id),
+                    correctAnswer: this.questionManager.getCorrectAnswer(question.id),
+                    explanation: question.options.find(opt => opt.correct)?.explanation || ''
+                });
+            }
+        });
+
+        const progressData = {
+            lessonName: this.currentLessonName,
+            difficulty: this.selectedDifficulty,
+            score: correctAnswers,
+            totalQuestions: this.questionManager.getTotalQuestions(),
+            points: this.scoreManager.points,
+            streak: this.scoreManager.streak,
+            errors: errors,
+            date: new Date().toISOString()
+        };
+
+        try {
+            await this.databaseManager.saveProgress(progressData);
+            console.log('Progreso guardado en la DB.');
+        } catch (error) {
+            console.error('Error saving progress:', error);
+        }
     }
 
     // Métodos para manejo de texto a voz

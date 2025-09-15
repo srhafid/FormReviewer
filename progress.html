@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progreso en CyberQuiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./statics/css/index.css">
+    <style>
+        :root {
+            --primary: #F59E0B; /* Amber as the new primary color */
+            --secondary: #10B981; /* Emerald for accents */
+            --dark: #1F2937; /* Gray-800 */
+            --light: #F3F4F6; /* Gray-100 */
+            --accent: #F59E0B; /* Matching primary for consistency */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, #FEF3C7, #FDE68A); /* Warm amber gradient */
+        }
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .summary-card {
+            background: #FFFFFF;
+            border: 1px solid #FEEBC8;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .summary-card:hover {
+            background: #FEF3C7;
+            transform: scale(1.02);
+        }
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+        .summary-card:hover .icon {
+            transform: scale(1.1);
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #FEEBC8;
+            border-radius: 9999px;
+            overflow: hidden;
+            height: 0.75rem;
+        }
+        .progress-fill {
+            height: 0.75rem;
+            background-color: var(--primary);
+            border-radius: 9999px;
+            transition: width 0.5s ease-in-out;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm py-4 sticky top-0 z-10">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-[var(--primary)] flex items-center">
+                <i class="fas fa-chart-line mr-2"></i> CyberQuiz - Progreso
+            </h1>
+            <a href="index.html" class="text-[var(--primary)] hover:text-[var(--secondary)] transition-colors flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Volver al Inicio
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold mb-4 text-[var(--dark)]">Tu Progreso en CyberQuiz</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explora tus métricas de rendimiento y descubre áreas de oportunidad para dominar la ciberseguridad.</p>
+        </div>
+
+        <div id="noData" class="card p-6 mb-8 text-center hidden fade-in">
+            <i class="fas fa-exclamation-triangle text-3xl text-[var(--primary)] mb-4"></i>
+            <p class="text-xl text-gray-600">No hay datos de progreso disponibles. ¡Completa algunos quizzes para ver tus estadísticas!</p>
+        </div>
+
+        <div id="progressContainer" class="hidden space-y-8">
+            <!-- Resumen General -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                    <i class="fas fa-tachometer-alt mr-2 text-[var(--primary)]"></i> Resumen Ejecutivo
+                </h2>
+                <div id="generalSummary" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+            </div>
+
+            <!-- Grilla de Gráficos -->
+            <div class="chart-grid">
+                <!-- Gráfico de Progreso en el Tiempo -->
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                        <i class="fas fa-chart-line mr-2 text-[var(--secondary)]"></i> Evolución de Puntuaciones
+                    </h2>
+                    <canvas id="timeProgressChart" height="200"></canvas>
+                </div>
+
+                <!-- Gráfico de Rendimiento por Lección -->
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                        <i class="fas fa-chart-bar mr-2 text-[var(--primary)]"></i> Desempeño por Lección
+                    </h2>
+                    <canvas id="lessonPerformanceChart" height="200"></canvas>
+                </div>
+
+                <!-- Gráfico de Consistencia -->
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                        <i class="fas fa-calendar-check mr-2 text-[var(--secondary)]"></i> Consistencia Semanal
+                    </h2>
+                    <canvas id="consistencyChart" height="200"></canvas>
+                </div>
+
+                <!-- Distribución de Errores -->
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                        <i class="fas fa-exclamation-circle mr-2 text-red-500"></i> Análisis de Errores
+                    </h2>
+                    <canvas id="errorDistributionChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Áreas Débiles -->
+            <div class="card p-6">
+                <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                    <i class="fas fa-lightbulb mr-2 text-[var(--primary)]"></i> Áreas para Fortalecer
+                </h2>
+                <ul id="weakAreas" class="list-disc pl-6 space-y-4 text-base"></ul>
+                <div id="overallWeaknessProgress" class="mt-4 text-gray-700 flex items-center">
+                    <span class="mr-2">Progreso General:</span>
+                    <div class="progress-bar">
+                        <div id="weaknessProgressFill" class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <span id="weaknessProgressPercent" class="ml-2 font-semibold">0%</span>
+                </div>
+            </div>
+
+            <!-- Insights -->
+            <div class="card p-6 bg-gray-50">
+                <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
+                    <i class="fas fa-brain mr-2 text-[var(--secondary)]"></i> Insights Estratégicos
+                </h2>
+                <div id="insights" class="text-gray-700 leading-relaxed space-y-3 text-base"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-[var(--primary)] py-6 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <p class="text-white mb-4 md:mb-0">© 2023 CyberQuiz - Impulsa tu maestría en ciberseguridad</p>
+            <a href="https://github.com/srhafid/FormReviewer" class="text-white hover:text-[var(--light)] transition" target="_blank">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <script src="./statics/js/database_manager.js"></script>
+    <script>
+        const dbManager = new DatabaseManager();
+
+        async function loadProgress() {
+            await dbManager.initialize();
+            const progressData = await dbManager.getAllProgress();
+            if (progressData.length === 0) {
+                document.getElementById('noData').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('progressContainer').classList.remove('hidden');
+
+            // Process data
+            progressData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // General Summary
+            const totalQuizzes = progressData.length;
+            const avgScore = (progressData.reduce((sum, p) => sum + (p.score / p.totalQuestions * 100), 0) / totalQuizzes).toFixed(1);
+            const bestScore = Math.max(...progressData.map(p => p.score / p.totalQuestions * 100)).toFixed(1);
+            const totalErrors = progressData.reduce((sum, p) => sum + p.errors.length, 0);
+            const totalPoints = progressData.reduce((sum, p) => sum + (p.points || 0), 0);
+            const streak = calculateStreak(progressData);
+            const improvementRate = calculateImprovementRate(progressData);
+            const avgTimePerQuiz = calculateAvgTime(progressData);
+
+            const generalSummary = document.getElementById('generalSummary');
+            generalSummary.innerHTML = `
+                <div class="summary-card p-5 text-center">
+                    <i class="fas fa-tasks icon text-[var(--primary)]"></i>
+                    <h3 class="font-semibold text-base">Quizzes Totales</h3>
+                    <p class="text-2xl font-bold">${totalQuizzes}</p>
+                </div>
+                <div class="summary-card p-5 text-center">
+                    <i class="fas fa-star icon text-[var(--secondary)]"></i>
+                    <h3 class="font-semibold text-base">Puntuación Promedio</h3>
+                    <p class="text-2xl font-bold">${avgScore}%</p>
+                </div>
+                <div class="summary-card p-5 text-center">
+                    <i class="fas fa-trophy icon text-[var(--primary)]"></i>
+                    <h3 class="font-semibold text-base">Mejor Puntuación</h3>
+                    <p class="text-2xl font-bold">${bestScore}%</p>
+                </div>
+                <div class="summary-card p-5 text-center">
+                    <i class="fas fa-bug icon text-red-500"></i>
+                    <h3 class="font-semibold text-base">Errores Totales</h3>
+                    <p class="text-2xl font-bold">${totalErrors}</p>
+                </div>
+                <div class="summary-card p-5 text-center col-span-1 sm:col-span-2 lg:col-span-1">
+                    <i class="fas fa-fire icon text-[var(--primary)]"></i>
+                    <h3 class="font-semibold text-base">Racha Máxima</h3>
+                    <p class="text-2xl font-bold">${streak} días</p>
+                </div>
+                <div class="summary-card p-5 text-center col-span-1 sm:col-span-2 lg:col-span-1">
+                    <i class="fas fa-arrow-up icon text-[var(--secondary)]"></i>
+                    <h3 class="font-semibold text-base">Tasa de Mejora</h3>
+                    <p class="text-2xl font-bold">${improvementRate.toFixed(1)}%</p>
+                </div>
+            `;
+
+            function calculateStreak(data) {
+                let maxStreak = 0;
+                let currentStreak = 1;
+                for (let i = 1; i < data.length; i++) {
+                    const prevDate = new Date(data[i-1].date);
+                    const currDate = new Date(data[i].date);
+                    const diffDays = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+                    if (diffDays === 1) {
+                        currentStreak++;
+                        maxStreak = Math.max(maxStreak, currentStreak);
+                    } else {
+                        currentStreak = 1;
+                    }
+                }
+                return Math.max(maxStreak, currentStreak);
+            }
+
+            function calculateImprovementRate(data) {
+                if (data.length < 2) return 0;
+                const scores = data.map(p => p.score / p.totalQuestions * 100);
+                const x = Array.from({length: data.length}, (_, i) => i);
+                const n = x.length;
+                const sumX = x.reduce((a, b) => a + b, 0);
+                const sumY = scores.reduce((a, b) => a + b, 0);
+                const sumXY = x.reduce((a, b, i) => a + b * scores[i], 0);
+                const sumX2 = x.reduce((a, b) => a + b * b, 0);
+                const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                return slope * 100;
+            }
+
+            function calculateAvgTime(data) {
+                const times = data.map(p => p.time || 0);
+                return (times.reduce((a, b) => a + b, 0) / data.length / 60).toFixed(1);
+            }
+
+            // Time Progress Chart
+            const dates = progressData.map(p => new Date(p.date).toLocaleDateString());
+            const scores = progressData.map(p => (p.score / p.totalQuestions * 100).toFixed(1));
+            const ctxTime = document.getElementById('timeProgressChart').getContext('2d');
+            const gradient = ctxTime.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(245, 158, 11, 0.6)');
+            gradient.addColorStop(1, 'rgba(245, 158, 11, 0.1)');
+            new Chart(ctxTime, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Puntuación (%)',
+                        data: scores,
+                        borderColor: 'rgb(245, 158, 11)',
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgb(245, 158, 11)',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                    plugins: { datalabels: { color: '#1F2937', font: { weight: '600' } } }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            // Lesson Performance Chart
+            const lessons = [...new Set(progressData.map(p => p.lessonName))];
+            const lessonAverages = lessons.map(lesson => {
+                const lessonData = progressData.filter(p => p.lessonName === lesson);
+                return (lessonData.reduce((sum, p) => sum + (p.score / p.totalQuestions * 100), 0) / lessonData.length).toFixed(1);
+            });
+            const barColors = lessonAverages.map(avg => avg >= 80 ? 'rgb(16, 185, 129)' : avg >= 60 ? 'rgb(245, 158, 11)' : 'rgb(239, 68, 68)');
+            new Chart(document.getElementById('lessonPerformanceChart'), {
+                type: 'bar',
+                data: {
+                    labels: lessons,
+                    datasets: [{
+                        label: 'Puntuación Promedio (%)',
+                        data: lessonAverages,
+                        backgroundColor: barColors,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                    plugins: { datalabels: { anchor: 'end', align: 'top', color: '#1F2937' } }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            // Consistency Chart
+            const weeklyCounts = {};
+            const weekLabels = [];
+            progressData.forEach(p => {
+                const date = new Date(p.date);
+                const year = date.getFullYear();
+                const weekNum = Math.floor((date - new Date(year, 0, 1)) / (7 * 24 * 60 * 60 * 1000)) + 1;
+                const week = `${year}-S${weekNum.toString().padStart(2, '0')}`;
+                weeklyCounts[week] = (weeklyCounts[week] || 0) + 1;
+                if (!weekLabels.includes(week)) weekLabels.push(week);
+            });
+            new Chart(document.getElementById('consistencyChart'), {
+                type: 'bar',
+                data: {
+                    labels: weekLabels.sort(),
+                    datasets: [{
+                        label: 'Quizzes por Semana',
+                        data: weekLabels.map(w => weeklyCounts[w] || 0),
+                        backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                        borderRadius: 6
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+
+            // Error Distribution Chart
+            const errorByLesson = lessons.map(lesson => {
+                const lessonData = progressData.filter(p => p.lessonName === lesson);
+                return lessonData.reduce((sum, p) => sum + p.errors.length, 0);
+            });
+            new Chart(document.getElementById('errorDistributionChart'), {
+                type: 'pie',
+                data: {
+                    labels: lessons,
+                    datasets: [{
+                        data: errorByLesson,
+                        backgroundColor: ['#EF4444', '#F59E0B', '#10B981', '#F59E0B', '#8B5CF6']
+                    }]
+                },
+                options: {
+                    plugins: { datalabels: { color: 'white', font: { weight: '600' } } }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            // Weak Areas with Progress Bar
+            const weakLessons = lessons.filter((lesson, idx) => lessonAverages[idx] < 70);
+            const weakAreas = document.getElementById('weakAreas');
+            const overallWeaknessAvg = weakLessons.length > 0 ? 
+                (weakLessons.reduce((sum, lesson) => sum + parseFloat(lessonAverages[lessons.indexOf(lesson)]), 0) / weakLessons.length).toFixed(1) : 0;
+            if (weakLessons.length === 0) {
+                weakAreas.innerHTML = '<li class="text-[var(--secondary)] font-medium">¡Excelente! No hay áreas débiles detectadas.</li>';
+                document.getElementById('weaknessProgressFill').style.width = '100%';
+                document.getElementById('weaknessProgressPercent').textContent = '100%';
+            } else {
+                weakAreas.innerHTML = weakLessons.map(lesson => {
+                    const avg = lessonAverages[lessons.indexOf(lesson)];
+                    return `
+                        <li class="flex items-center justify-between">
+                            <span>${lesson}</span>
+                            <div class="w-1/3 bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-[var(--primary)] h-2.5 rounded-full" style="width: ${avg}%"></div>
+                            </div>
+                            <span class="ml-4 font-semibold">${avg}%</span>
+                        </li>
+                    `;
+                }).join('');
+                document.getElementById('weaknessProgressFill').style.width = `${overallWeaknessAvg}%`;
+                document.getElementById('weaknessProgressPercent').textContent = `${overallWeaknessAvg}%`;
+            }
+
+            // Insights
+            const consistencyLevel = totalQuizzes / ((new Date(progressData[progressData.length - 1].date) - new Date(progressData[0].date)) / (1000 * 60 * 60 * 24 * 7)) > 1 ? 'excelente' : 'oportunidad para aumentar';
+            const mostErrorLesson = lessons[errorByLesson.indexOf(Math.max(...errorByLesson))];
+            const insights = document.getElementById('insights');
+            insights.innerHTML = `
+                <p><strong>Consistencia Clave:</strong> Mantienes una ${consistencyLevel} (racha máxima: ${streak} días). Apunta a quizzes diarios para acelerar el progreso.</p>
+                <p><strong>Errores Estratégicos:</strong> La mayoría de errores ocurren en "${mostErrorLesson}" (${Math.max(...errorByLesson)} totales). Revisa conceptos específicos allí.</p>
+                <p><strong>Puntos Acumulados:</strong> ${totalPoints} puntos. Usa esto para rastrear motivación y metas.</p>
+                <p><strong>Enfoque Prioritario:</strong> Dedica tiempo extra a lecciones débiles para un ROI alto en conocimiento de ciberseguridad.</p>
+            `;
+        }
+
+        loadProgress();
+    </script>
+</body>
+</html>

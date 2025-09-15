@@ -37,9 +37,12 @@
                             Importar DB
                             <input type="file" id="importDbBtn" accept=".json" class="hidden">
                         </label>
+                        <a id="" href="/progress.html"
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-100 rounded-md transition block cursor-pointer capitalize">resumen</a>
                         <button id="deleteAllDbBtn"
                             class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition">Eliminar
                             Toda la DB</button>
+
                     </div>
                 </div>
             </div>
@@ -76,7 +79,8 @@
                         Lección</button>
                     <button id="generateQuizBtn" class="btn-primary px-4 py-2 rounded-lg font-semibold text-sm">Generar
                         Nuevo Cuestionario</button>
-                    <button id="randomLessonBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold text-sm">Lección Aleatoria</button>
+                    <button id="randomLessonBtn"
+                        class="btn-secondary px-4 py-2 rounded-lg font-semibold text-sm">Lección Aleatoria</button>
                     <button id="loadFromDbBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold text-sm">Cargar
                         desde DB</button>
                 </div>
@@ -301,6 +305,8 @@
         </div>
     </footer>
 
+
+
     <script src="./statics/js/modal-prompt-generate.js"></script>
     <script src="./statics/js/database_manager.js"></script>
     <script src="./statics/js/timer_manager.js"></script>
@@ -311,6 +317,14 @@
     <script src="./statics/js/quiz_manager.js"></script>
     <script src="./statics/js/random_lesson.js"></script>
     <script src="./statics/js/index.js"></script>
+    <script>
+        // Evita selección por arrastre o doble clic
+        document.addEventListener('selectstart', e => e.preventDefault());
+
+        // Evita clic derecho (opcional)
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+    </script>
 </body>
 
 </html>
