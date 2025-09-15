@@ -5,27 +5,36 @@ document.addEventListener('DOMContentLoaded', function () {
     if (randomLessonBtn) {
         randomLessonBtn.addEventListener('click', async function () {
             try {
-                // Obtener el selector de lecciones
-                const lessonSelector = document.getElementById('lessonSelector');
-                if (!lessonSelector) {
-                    alert('Error: No se encontró el selector de lecciones.');
-                    return;
-                }
+                // Inicializar DatabaseManager
+                const dbManager = new DatabaseManager();
+                await dbManager.initialize();
 
-                // Obtener todas las opciones del selector, excluyendo la opción predeterminada ("-- Selecciona una lección --")
-                const options = Array.from(lessonSelector.options).filter(option => option.value !== '');
+                // Obtener todas las lecciones de IndexedDB
+                const lessons = await dbManager.getAllLessons();
 
-                if (options.length === 0) {
+                if (lessons.length === 0) {
                     alert('No hay lecciones disponibles para seleccionar.');
                     return;
                 }
 
-                // Seleccionar una opción aleatoria
-                const randomIndex = Math.floor(Math.random() * options.length);
-                const randomOption = options[randomIndex];
-                lessonSelector.value = randomOption.value;
+                // Seleccionar una lección aleatoria
+                const randomIndex = Math.floor(Math.random() * lessons.length);
+                const randomLesson = lessons[randomIndex];
 
-                // Disparar el evento de cambio en el selector para reflejar la selección
+                // Obtener el input oculto y el input de búsqueda
+                const lessonSelector = document.getElementById('lessonSelector');
+                const lessonSearchInput = document.getElementById('lessonSearchInput');
+
+                if (!lessonSelector || !lessonSearchInput) {
+                    alert('Error: No se encontraron los elementos de selección de lecciones.');
+                    return;
+                }
+
+                // Establecer el ID de la lección aleatoria y actualizar el input de búsqueda
+                lessonSelector.value = randomLesson.id;
+                lessonSearchInput.value = randomLesson.filename;
+
+                // Disparar el evento de cambio en lessonSelector para compatibilidad
                 const changeEvent = new Event('change', { bubbles: true });
                 lessonSelector.dispatchEvent(changeEvent);
 

@@ -42,7 +42,6 @@
                         <button id="deleteAllDbBtn"
                             class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition">Eliminar
                             Toda la DB</button>
-
                     </div>
                 </div>
             </div>
@@ -57,7 +56,7 @@
         </div>
 
         <div class="flex justify-center gap-6 mb-10">
-            <div class="card p-6">
+            <div class="p-6">
                 <h2 class="text-xl font-semibold mb-4 text-[var(--dark)] flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[var(--primary)]" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
@@ -67,10 +66,16 @@
                     Seleccionar Lección
                 </h2>
                 <div class="flex flex-col sm:flex-row gap-3 mb-4">
-                    <select id="lessonSelector"
-                        class="flex-1 p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition">
-                        <option value="">-- Selecciona una lección --</option>
-                    </select>
+                    <div class="relative flex-1">
+                        <input type="text" id="lessonSearchInput"
+                            class="w-full p-3 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition"
+                            placeholder="Buscar lección...">
+                        <div id="lessonDropdown"
+                            class="absolute z-10 w-full bg-white border border-gray-200 rounded-lg mt-1 max-h-60 overflow-y-auto hidden">
+                            <ul id="lessonList" class="divide-y divide-gray-200"></ul>
+                        </div>
+                        <input type="hidden" id="lessonSelector">
+                    </div>
                     <button id="loadLessonBtn"
                         class="btn-primary px-4 py-3 rounded-lg font-semibold whitespace-nowrap">Cargar Lección</button>
                 </div>
@@ -305,8 +310,6 @@
         </div>
     </footer>
 
-
-
     <script src="./statics/js/modal-prompt-generate.js"></script>
     <script src="./statics/js/database_manager.js"></script>
     <script src="./statics/js/timer_manager.js"></script>
@@ -316,6 +319,7 @@
     <script src="./statics/js/ui_manager.js"></script>
     <script src="./statics/js/quiz_manager.js"></script>
     <script src="./statics/js/random_lesson.js"></script>
+    <script src="./statics/js/lesson_search.js"></script>
     <script src="./statics/js/index.js"></script>
     <script>
         // Evita selección por arrastre o doble clic
@@ -323,7 +327,6 @@
 
         // Evita clic derecho (opcional)
         document.addEventListener('contextmenu', e => e.preventDefault());
-
     </script>
 </body>
 
