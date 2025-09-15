@@ -139,18 +139,21 @@ class UIManager {
     showSummary(results, questions) {
         const summaryDiv = document.getElementById('summary');
         summaryDiv.innerHTML = `
-            <h2 class="text-2xl font-bold text-center text-[#ed8936] mb-6">Resumen de Respuestas</h2>
-            ${results.map((result, index) => `
-                <a href="#header-smoth-scroll">
-                    <button class="summary-item ${result.correct ? 'correct' : 'incorrect'}" 
+            <h2 class="text-3xl font-bold text-center text-orange-500 mb-8 tracking-tight">Resumen de Respuestas</h2>
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
+                ${results.map((result, index) => `
+                    <a href="#header-smoth-scroll" class="block">
+                        <button class="w-full py-3 px-4 rounded-lg shadow-md text-lg font-medium transition-all duration-200 
+                            ${result.correct ? 'bg-green-100 text-green-800 border border-green-300 hover:bg-green-200' : 'bg-red-100 text-red-800 border border-red-300 hover:bg-red-200'} 
+                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" 
                             data-question-id="${questions[index].id}">
-                        Pregunta ${index + 1}: ${result.correct ? 'Correcta' : 'Incorrecta o no respondida'}
-                    </button>
-                </a>
-            `).join('')}
+                            Pregunta ${index + 1}: ${result.correct ? 'Correcta' : 'Incorrecta o no respondida'}
+                        </button>
+                    </a>
+                `).join('')}
+            </div>
         `;
     }
-
     openLoadJsonModal() {
         this.elements.loadJsonModal.classList.remove('hidden');
         document.getElementById('jsonInput').focus();
