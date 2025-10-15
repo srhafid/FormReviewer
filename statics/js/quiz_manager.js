@@ -309,8 +309,9 @@ class QuizManager {
     }
 
     setupSummaryListeners() {
-        document.querySelectorAll('.summary-item').forEach(button => {
-            button.addEventListener('click', () => {
+        document.querySelectorAll('#summary button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault(); // Evita la navegación de <a>
                 const questionId = button.getAttribute('data-question-id');
                 this.showSpecificQuestion(questionId);
             });
@@ -318,15 +319,14 @@ class QuizManager {
     }
 
     showSpecificQuestion(questionId) {
-        // Ocultar todas las preguntas
         this.questionManager.getShuffledQuestions().forEach(q => {
             this.uiManager.hideQuestion(q.id);
         });
-
-        // Mostrar pregunta específica
         this.uiManager.showQuestion(questionId);
-
-        // Actualizar progreso
+        const questionElement = document.getElementById(questionId);
+        if (questionElement) {
+            questionElement.scrollIntoView({ behavior: 'smooth' });
+        }
         const questionIndex = this.questionManager.getQuestionIndex(questionId);
         this.scoreManager.setCurrentQuestion(questionIndex + 1);
     }
