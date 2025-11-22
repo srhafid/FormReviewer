@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 '- Longitud de explicaciones: ' + explanationLength + '\n\n' +
                 '**Estructura JSON requerida (sin comentarios ni placeholders):**\n' +
                 '{\n' +
-                '    "context": ["texto del contexto utilizado"],\n' +
+                '    "context": ["texto del contexto utilizado y mejorado adaptado o resumido el contexto exclusivamente al criterio técnico, eliminando cualquier contenido no esencial y manteniendo solo la explicación técnica, de modo que el lector comprenda mejor el tema y pueda responder adecuadamente a las preguntas"],\n' +
                 '    "questions": [\n' +
                 '        {\n' +
                 '            "id": "identificador único",\n' +
@@ -76,7 +76,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 '- Explicaciones con longitud apropiada: corta(1-2 oraciones), mediana(3-4), larga(5+)\n' +
                 '- Opciones incorrectas deben ser plausibles pero erróneas y diseñadas para confundir a quien no domine el tema\n' +
                 '- Lenguaje claro, profesional y desafiante acorde al tema\n' +
-                '- PRIORIZA SIEMPRE EL APARTADO TÉCNICO, científico, de ingeniería o relacionado a ciencias. Evita preguntas arbitrarias sobre presentaciones, nombres, datos anecdóticos o superficiales. El enfoque debe ser en lo técnico y conceptual relevante al área de estudio.';
+                '- PRIORIZA SIEMPRE EL APARTADO TÉCNICO, científico, de ingeniería o relacionado a ciencias. Evita preguntas arbitrarias sobre presentaciones, nombres, datos anecdóticos o superficiales. El enfoque debe ser en lo técnico y conceptual relevante al área de estudio.' +
+                '- Adapta o resume el contexto exclusivamente al criterio técnico, eliminando cualquier contenido no esencial y manteniendo solo la explicación técnica, de modo que el lector comprenda mejor el tema y pueda responder adecuadamente a las preguntas.';
 
             // Copy prompt to clipboard
             navigator.clipboard.writeText(prompt).then(function () {
